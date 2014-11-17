@@ -50,36 +50,43 @@ class MpegTS(object):
         self.diagnostics = True
         self.pids = dict()
         self.blocksReceived = 0
+        self.name = None
+        self._dumpfname = None
 
     def addPayload(self,payload):
         '''Accept a chunk of data and add it to the existing payload and then send when we have
         enough payload received'''
+
         if self.aligned == True:
             self.alignedPayload += payload
             self.sendAlignedBlocks()
         else:
             self.payload = payload
             self._alignPayload()
-
+        if self._dumpfname:
+            self._dumpToFile(payload)
 
     def _alignPayload(self):
         '''Take the payload and align it up to the sync word. This is called from the addPayload method'''
-        payloadsize = len(self.payload)
         byteindex = 0
-        while(self.aligned == False):
+        #logging.error("Attempting to Align {} loop through payload of length = {}".format(self.name,len(self.payload)))
+        while self.aligned == False and len(self.payload) > byteindex:
+            #print "idx={} len={}".format(byteindex,len(self.payload))
             (thisByte,) = struct.unpack_from('B',self.payload[byteindex])
+            #logging.error("Byte = {:0X}".format(thisByte))
             if thisByte == 0x47:
-                self.alignedPayload += self.payload[byteindex:]
+                self.alignedPayload = self.payload[byteindex:]
                 self.aligned = True
             else:
                 byteindex += 1
+
 
     def _checkAlignment(self):
         '''Verify that we are still in alignment'''
         (syncByte,) = struct.unpack_from('B',self.alignedPayload)
         if syncByte != 0x47:
             self.aligned = False
-            logging.error("Out of sync in MPEG TS")
+            logging.error("Out of sync in MPEG TS {}".format(self.name))
 
     def setupUDP(self):
         '''Open a UDP socket'''
@@ -133,3 +140,8 @@ class MpegTS(object):
             else:
                 ptext = str(pid)
             print "PID = {:30s} Received = {}({:2}%) Dropped = {}".format(ptext, self.pids[pid]['count'], (self.pids[pid]['count']*100/self.blocksReceived), self.pids[pid]['cdrops'])
+
+    def _dumpToFile(self,buf):
+        dumpf = open(self._dumpfname,'ab')
+        dumpf.write(buf)
+        dumpf.close()

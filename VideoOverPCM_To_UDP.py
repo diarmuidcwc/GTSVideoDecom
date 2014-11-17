@@ -32,7 +32,7 @@ import MpegTS
 # Constants for this script
 GTSDEC_SERIAL_NUM = "XS9766"
 DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
-SRC_XIDML = "Configuration/vid_enc.xml"
+SRC_XIDML = "Configuration/vid_106_103.XML"
 GTSDEC_XIDML = "Configuration/gtsdec5.xml"
 GTSDEC_NAME = "MyCard"
 
@@ -51,8 +51,16 @@ class CustomGTSDecom(GtsDec.GtsDec):
         udp_port = CustomGTSDecom.BASE_UDP_PORT
         for vid in self.vidOverPCM.vidsPerXidml:
             self.mpegTS[vid] = MpegTS.MpegTS()
+            self.mpegTS[vid].name = vid
+            #self.mpegTS[vid]._dumpfname = "{}.bin".format(udp_port)
             self.mpegTS[vid].dstudp = udp_port
             udp_port += 1
+
+    def getSummary(self):
+        ret_str = ""
+        for vid in self.vidOverPCM.vidsPerXidml:
+            ret_str += "Transmitting vid {} to address {} on port {}\n".format(self.mpegTS[vid].name,self.mpegTS[vid].dstip,self.mpegTS[vid].dstudp)
+        return ret_str
 
 
     def bufferCallBack(self,timeStamp,pwords,wordCount,puserInfo):
@@ -61,6 +69,7 @@ class CustomGTSDecom(GtsDec.GtsDec):
         # one for each VID in the PCM frame
         vid_bufs = self.vidOverPCM.frameToBuffers(pwords[:wordCount])
         for vid,buf in vid_bufs.iteritems():
+            #print "Decom frame vid = {}".format(vid)
             self.mpegTS[vid].addPayload(buf)
         return 0
 
@@ -74,6 +83,8 @@ def main():
     # Get the source xidml file with the VID PCM structure
     vidxidml = VidOverPCM.VidOverPCM()
     vidxidml.parseXidml(SRC_XIDML)
+    for vidname in vidxidml.vids:
+        logging.info("Found vid = {}".format(vidname))
     # We now have an object that knows how to convert a PCM frame into one or multiple
     # video payloads containing MPEG TS data
     logging.info("Read in source xidml")
@@ -87,12 +98,13 @@ def main():
     logging.info("GTS/DEC card successfully opened")
     mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
                                                         # my CustomGTSDecom class
+    print mygtsdec.getSummary()
 
     mygtsdec.run()                          # Run the acquisition
     logging.info("Acquisition running")
 
     second_count = 0
-    while second_count <50:                 # Run for a number of seconds
+    while True:                 # Run for a number of seconds
         print ".",
         time.sleep(1)                       # The callback will be firing all during this point
         second_count += 1

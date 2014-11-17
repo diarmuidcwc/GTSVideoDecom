@@ -37,8 +37,8 @@ class VidOverPCM():
         self.xidml = None
         self.tree = None
         self.root = None
-        self.vid106s = dict()
-        self.vidInstruments = "KAD/VID/106"
+        self.vids = dict()
+        self.vidInstruments = {"KAD/VID/106","KAD/VID/103"}
         # Hard code these for the moment but they can be pulled from the xidml
         self.minorFrameOffsetBits = 32
         self.minorFramesPerMajorFrames =1
@@ -66,7 +66,7 @@ class VidOverPCM():
 
     def _numberOfVids(self):
         '''Calculate how many separate VID instruments have parameters'''
-        for vid,params in self.vid106s.iteritems():
+        for vid,params in self.vids.iteritems():
             numberOfParams = len(params)
             if numberOfParams > 0:
                 self.vidsPerXidml.append(vid)
@@ -76,9 +76,9 @@ class VidOverPCM():
     def frameToBuffers(self,listofwords):
         '''Takes a buffer containing a major frame and returns a list of buffers of MPEG_TS'''
         vid_bufs = {}
-        for vid in self.vid106s:
+        for vid in self.vids:
             vid_bufs[vid] = ""
-        for vid,params in self.vid106s.items():
+        for vid,params in self.vids.items():
             numberOfParams = len(params)
             # create a temp dict so that I can build the string out of order
             _buffertmp = {}
@@ -98,9 +98,9 @@ class VidOverPCM():
         '''Find all the video instruments in the xidml'''
         allModules = self.root.findall(".//PartReference")
         for module in allModules:
-            if module.text == self.vidInstruments:
+            if module.text in self.vidInstruments:
                 vidname = module.getparent().getparent().attrib["Name"]
-                self.vid106s[vidname] = dict() # dict will contain the parameters + locations
+                self.vids[vidname] = dict() # dict will contain the parameters + locations
 
 
     def _findAllParameters(self):
@@ -109,10 +109,10 @@ class VidOverPCM():
         for parameter in allParameters:
             source_instrument = parameter.find("Source/Signal/InstrumentReference")
             if source_instrument != None:
-                if source_instrument.text in self.vid106s:
+                if source_instrument.text in self.vids:
                     if re.search(self._parameterOfInterestRE,parameter.attrib["Name"]):
                         # Build up a dict containing each instrument, each parameter and a list of the word offsets
-                        self.vid106s[source_instrument.text][parameter.attrib["Name"]] = list()
+                        self.vids[source_instrument.text][parameter.attrib["Name"]] = list()
                         self._allVidParams[parameter.attrib["Name"]] = source_instrument.text
 
 
@@ -146,7 +146,7 @@ class VidOverPCM():
                     # If there are multiple instances of the word in a frame then they are equally spaced in the fram
                     # record the word offset per parameter in an array
                     for offset in range(poccurrances):
-                        self.vid106s[self._allVidParams[pname]][pname].append(firstWordOffset+(offsetWordInterval*offset))
+                        self.vids[self._allVidParams[pname]][pname].append(firstWordOffset+(offsetWordInterval*offset))
 
 
 
