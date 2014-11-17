@@ -29,6 +29,7 @@ from collections import deque
 import math
 
 
+
 class MpegTS(object):
     '''Simple class that will generate and send UDP payloads containing MPEG TS data from a supplied
     The class will align the data at the start, discarding up to 188 bytes, then continuously
@@ -39,13 +40,14 @@ class MpegTS(object):
     UDP_PAYLOAD_LEN = MPEG_TS_BLOCKS_PER_PACKET * MPEG_TS_BLOCK_LEN
     PID_TEXT = {0x1fff : "Null", 0x0 : "Program Association Table", 0x100 : "VID106_Video" , 0x101 : "VID106_Audio", 0x1000 : "Program Map Table"}
 
-    def __init__(self):
-        super(MpegTS,self).__init__()
+    def __init__(self,ipaddress="192.168.28.110",udpport=777):
+        #super(MpegTS,self).__init__()
         self.payload = ""
         self.alignedPayload = ""
-        self.dstip = "192.168.28.110"
-        self.dstudp = 7777
+        self.dstip = ipaddress
+        self.dstudp = udpport
         self.setupUDP()
+
         self.aligned = False
         self.diagnostics = True
         self.pids = dict()
@@ -91,6 +93,7 @@ class MpegTS(object):
     def setupUDP(self):
         '''Open a UDP socket'''
         self.sendSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+
 
 
     def sendAlignedBlocks(self):
@@ -139,7 +142,7 @@ class MpegTS(object):
                 ptext = MpegTS.PID_TEXT[pid]
             else:
                 ptext = str(pid)
-            print "PID = {:30s} Received = {}({:2}%) Dropped = {}".format(ptext, self.pids[pid]['count'], (self.pids[pid]['count']*100/self.blocksReceived), self.pids[pid]['cdrops'])
+            print "Vid= {:10s} PID = {:30s} Received = {}({:2}%) Dropped = {}".format(self.name,ptext, self.pids[pid]['count'], (self.pids[pid]['count']*100/self.blocksReceived), self.pids[pid]['cdrops'])
 
     def _dumpToFile(self,buf):
         dumpf = open(self._dumpfname,'ab')

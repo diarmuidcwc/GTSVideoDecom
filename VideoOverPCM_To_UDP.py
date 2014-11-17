@@ -45,15 +45,16 @@ class CustomGTSDecom(GtsDec.GtsDec):
         super(CustomGTSDecom, self).__init__()
         self.vidOverPCM = None
         self.mpegTS = dict()
+        self.logtofile = False
 
     def addVidOverPCM(self,vidoverPCM):
         self.vidOverPCM = vidoverPCM
         udp_port = CustomGTSDecom.BASE_UDP_PORT
         for vid in self.vidOverPCM.vidsPerXidml:
-            self.mpegTS[vid] = MpegTS.MpegTS()
+            self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port)
             self.mpegTS[vid].name = vid
-            #self.mpegTS[vid]._dumpfname = "{}.bin".format(udp_port)
-            self.mpegTS[vid].dstudp = udp_port
+            if self.logtofile:
+                self.mpegTS[vid]._dumpfname = "{}.bin".format(udp_port)
             udp_port += 1
 
     def getSummary(self):
