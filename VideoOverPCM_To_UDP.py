@@ -33,6 +33,8 @@ import MpegTS
 GTSDEC_SERIAL_NUM = "XS9766"
 DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
 SRC_XIDML = "Configuration/vid_enc.xml"
+GTSDEC_XIDML = "Configuration/gtsdec5.xml"
+GTSDEC_NAME = "MyCard"
 
 class CustomGTSDecom(GtsDec.GtsDec):
     '''Create a new class inheriting the GtsDec class. Override the callback method using this approach'''
@@ -72,30 +74,30 @@ def main():
     # Get the source xidml file with the VID PCM structure
     vidxidml = VidOverPCM.VidOverPCM()
     vidxidml.parseXidml(SRC_XIDML)
-    logging.info("Read in source xidml")
     # We now have an object that knows how to convert a PCM frame into one or multiple
     # video payloads containing MPEG TS data
-
-    # Pass the  dtsdecw.dll path.
-    gts_dll_path = DLL_PATH
+    logging.info("Read in source xidml")
 
     # I have inherited the basic GTSDec Class so that I can replace the callback function
-    mygtsdec = CustomGTSDecom()             # A new GtsDec object
-    mygtsdec.addVidOverPCM(vidxidml)        # The VidOverPCM object
-    mygtsdec.setdllpath(gts_dll_path)       # Pass the dll path
-    mygtsdec.openserial(GTSDEC_SERIAL_NUM)           # Open the card by serial number
+    mygtsdec = CustomGTSDecom()                         # A new GtsDec object
+    mygtsdec.addVidOverPCM(vidxidml)                    # The VidOverPCM object
+    mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
+    mygtsdec.configureGtsDec(GTSDEC_XIDML,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration
+    mygtsdec.openGtsDec(GTSDEC_SERIAL_NUM)              # Open the card by serial number
     logging.info("GTS/DEC card successfully opened")
-    mygtsdec.setupcallback()                # Setup the default callback, this is the method declared in my CustomGTSDecom class
+    mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
+                                                        # my CustomGTSDecom class
 
     mygtsdec.run()                          # Run the acquisition
     logging.info("Acquisition running")
 
     second_count = 0
-    while second_count <50:                 # Run for a numbner of seconds
+    while second_count <50:                 # Run for a number of seconds
         print ".",
         time.sleep(1)                       # The callback will be firing all during this point
         second_count += 1
     print ""
+
     logging.info("Stopping acquisition")
     mygtsdec.stop()                         # Stop the acquisition
     mygtsdec.close()                        # Close the card

@@ -23,7 +23,8 @@
 
 import ctypes
 import os
-import time
+import subprocess
+
 
 
 # structs from the define. This should be fine
@@ -92,33 +93,39 @@ class GtsDec(object):
         '''Initialise a GTSDEC object. Needs to pass the path to gtsdllw.dll'''
         super(GtsDec,self).__init__()
         self.gtsdecwDLLPath = None
-        self.programmerDLLPath = None
+        self.gtsdecXidml = None
+        self.gtsdecName = None
         self.serialnumber = None
         self._handle = ctypes.c_void_p()
         self._user_handle = ctypes.c_void_p()
+        self._loadSetupBin = "bin/gts_setup_clr.exe"
 
-    def setdllpath(self,dllpath):
-        '''Setup and verify the dll path'''
+    def setDLLPath(self,dllpath):
+        '''Setup and verify the path to the gtsdecw.dll file'''
         if not os.path.exists(dllpath):
             raise IOError("{} not found".format(dllpath))
         self.gtsdecwDLLPath = dllpath
         self.gtsdecw = ctypes.WinDLL(self.gtsdecwDLLPath)
 
-    def setProgrammerDLL(self,dllpath):
-        '''Setup and verify the dll path'''
-        if not os.path.exists(dllpath):
-            raise IOError("{} not found".format(dllpath))
-        self.programmerDLLPath = dllpath
-        self.gtsdep = ctypes.WinDLL(self.programmerDLLPath)
 
-    def loadSetup(self,xidml):
-        '''Load a xidml to configure the GTS/DEC'''
+    def configureGtsDec(self,xidml,gtsdecname):
+        '''Load a xidml to configure the GTS/DEC and specify the name of the GTS/DEC card'''
         if not os.path.exists(xidml):
             raise IOError("{} not found".format(xidml))
+        self.gtsdecXidml = xidml
+        self.gtsdecName = gtsdecname
+        try:
+            command_line = [self._loadSetupBin,self.gtsdecXidml,self.gtsdecName]
+            subprocess.check_call(command_line)
+        except subprocess.CalledProcessError:
+            raise Exception("Failed to configure GTS/DEC card")
+        except:
+            raise Exception("Failed to run {}".format(command_line))
 
 
-    def openserial(self,serialnumber):
-        '''Open a GTS/DEC card as indicated by the serial number passed'''
+    def openGtsDec(self,serialnumber):
+        '''Open a GTS/DEC card in preparation for acquisition.
+        The serial number passed is that of the GTS/DEC card installed'''
         try:
             ret = self.gtsdecw.OpenStringSerial(ctypes.c_char_p(serialnumber), ctypes.byref(self._handle) )
         except:
@@ -128,9 +135,9 @@ class GtsDec(object):
         self.serialnumber = serialnumber
 
 
-    def setupcallback (self):
-        '''Set up the callback structure for the acqusition.
-        You can override the default methods independently'''
+    def setupCallback (self):
+        '''Set up the callback structure for the acquisition.
+        You can override the default methods independently. Do not override this method'''
 
         self.callback_array = BufferCallBackStructArray()
         index = 0
@@ -151,13 +158,13 @@ class GtsDec(object):
 
 
     def bufferCallBack(self,timeStamp,pwords,wordCount,puserInfo):
-        '''The callback method that is run on every frame'''
+        '''The callback method that is run on every frame. This can be overridden to implement custom behaviour'''
         print "Received {} words".format(wordCount)
         return 0
 
     def bufferCallBack2(self,a,b,c,d):
-        '''The callback method that is run on every frame if multiple frames are acquired at a time'''
-        print "Something2"
+        '''The callback method that is run on every frame if multiple frames are acquired at a time
+        Not implemented at this time'''
         return 0
 
     def __getCallbackFunc(self):

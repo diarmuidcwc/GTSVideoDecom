@@ -22,9 +22,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import ctypes
+import win32com.client
 import os
+import ctypes
 
 
-setup = ctypes.WinDLL(os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","ACRA.GtsDecProgrammer.dll")  )
-print setup.LoadSetup()
+def send(self):
+    return buffer(self)[:]
+
+
+
+
+manager = win32com.client.Dispatch("ACRA.GtsDec.XidML.GtsProgrammerInterfaceManager")
+myProgrammer = manager.GroundStationProgrammerFactory.Create()
+myInstrumentChannel = win32com.client.Dispatch("ACRA.GtsDec.XidML.CInstrumentChannelCollection")
+for i in range(1):
+    mystruct = win32com.client.Record("InstrumentChannelStruct","ACRA.GtsDec.XidML.GtsProgrammerInterfaceManager")
+    myInstrumentChannel.Add(mystruct)
+
+XIDML_PATH = os.path.join("C:\\","WORK","WORK_MISC_UTILS","PythonUtils","GTSDecom","gtsdec5.xml")
+ret = myProgrammer.LoadSetupCollection(myInstrumentChannel,XIDML_PATH)
