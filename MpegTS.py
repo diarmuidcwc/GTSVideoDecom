@@ -55,6 +55,10 @@ class MpegTS(object):
         self.name = None
         self._dumpfname = None
 
+    def setAlignment(self,status=True):
+        self.aligned = status
+        self.printInfo()
+
     def addPayload(self,payload):
         '''Accept a chunk of data and add it to the existing payload and then send when we have
         enough payload received'''
@@ -78,7 +82,7 @@ class MpegTS(object):
             #logging.error("Byte = {:0X}".format(thisByte))
             if thisByte == 0x47:
                 self.alignedPayload = self.payload[byteindex:]
-                self.aligned = True
+                self.setAlignment()
             else:
                 byteindex += 1
 
@@ -87,7 +91,7 @@ class MpegTS(object):
         '''Verify that we are still in alignment'''
         (syncByte,) = struct.unpack_from('B',self.alignedPayload)
         if syncByte != 0x47:
-            self.aligned = False
+            self.setAlignment(False)
             logging.error("Out of sync in MPEG TS {}".format(self.name))
 
     def setupUDP(self):
@@ -143,6 +147,12 @@ class MpegTS(object):
             else:
                 ptext = str(pid)
             print "Vid= {:10s} PID = {:30s} Received = {}({:2}%) Dropped = {}".format(self.name,ptext, self.pids[pid]['count'], (self.pids[pid]['count']*100/self.blocksReceived), self.pids[pid]['cdrops'])
+
+    def printInfo(self):
+        if self.aligned:
+            print "INFO: {} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp)
+        else:
+            print "WARNING: {} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp)
 
     def _dumpToFile(self,buf):
         dumpf = open(self._dumpfname,'ab')

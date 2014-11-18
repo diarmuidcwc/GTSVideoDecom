@@ -4545,7 +4545,7 @@
 										<TemporalDecimation>25</TemporalDecimation>
 									</Compression>
 									<Source>
-										<MultiplexerSelect>TEST</MultiplexerSelect>
+										<MultiplexerSelect>INPUT1</MultiplexerSelect>
 										<InputFormat>PAL</InputFormat>
 										<Resolution>CIF</Resolution>
 									</Source>

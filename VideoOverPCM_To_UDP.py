@@ -32,8 +32,9 @@ import MpegTS
 # Constants for this script
 GTSDEC_SERIAL_NUM = "XS9766"
 DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
-SRC_XIDML = "Configuration/vid_106_103.XML"
-GTSDEC_XIDML = "Configuration/gtsdec5.xml"
+#SRC_XIDML = "Configuration/vid_106_103.XML"
+SRC_XIDML = "Configuration/vid_106_103.xidml"
+GTSDEC_XIDML = "Configuration/gtsdec5_vid_106_103.xml"
 GTSDEC_NAME = "MyCard"
 
 class CustomGTSDecom(GtsDec.GtsDec):
