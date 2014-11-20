@@ -137,6 +137,7 @@ class VidOverPCM():
             allPCMPackages= self.root.findall("Packages/PackageSet/X-IRIG-106-Ch-4-1.2")
             for package in allPCMPackages:
                 bitsPerFrame = int(package.findtext("Properties/MajorFrameProperties/BitsPerMinorFrame"))
+                minorFramesPerMajorFrames = int(package.findtext("Properties/MajorFrameProperties/MinorFramesPerMajorFrame"))
                 for param in package.findall("Content/Parameter"):
                     pname = param.attrib["Name"]
                     if pname in self._allVidParams:
@@ -147,8 +148,9 @@ class VidOverPCM():
                             raise Exception("Currently only support 1 minor frame")
 
                         # We have to handle the offset and then get a word index
+                        #Occurrances seem o be ber major frame so divide to get occurrances per minor frame
                         if param.findtext("Location/Occurrences"):
-                            poccurrances = int(param.findtext("Location/Occurrences"))
+                            poccurrances = int(param.findtext("Location/Occurrences")) / minorFramesPerMajorFrames
                         else:
                             poccurrances = 1
 

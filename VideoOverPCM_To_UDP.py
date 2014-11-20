@@ -21,59 +21,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import GtsDec
+
 import os
 import time
 import VidOverPCM
-import socket
-import logging
-import MpegTS
+import VideoGTSDecom
 
 # Constants for this script
 GTSDEC_SERIAL_NUM = "XS9766"
 DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
 #SRC_XIDML = "Configuration/vid_106_103.XML"
-SRC_XIDML = "Configuration/vid_106_103.xidml"
-GTSDEC_XIDML = "Configuration/gtsdec5_vid_106_103.xml"
+SRC_XIDML = "Configuration/vid_106_103_minorframes.XML"
+GTSDEC_XIDML = "Configuration/gtsdec5_vid_13_16_minor.xml"
 GTSDEC_NAME = "MyCard"
-
-class CustomGTSDecom(GtsDec.GtsDec):
-    '''Create a new class inheriting the GtsDec class. Override the callback method using this approach'''
-
-    BASE_UDP_PORT = 7777
-
-    def __init__(self):
-        super(CustomGTSDecom, self).__init__()
-        self.vidOverPCM = None
-        self.mpegTS = dict()
-        self.logtofile = False
-
-    def addVidOverPCM(self,vidoverPCM):
-        self.vidOverPCM = vidoverPCM
-        udp_port = CustomGTSDecom.BASE_UDP_PORT
-        for vid in self.vidOverPCM.vidsPerXidml:
-            self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port)
-            self.mpegTS[vid].name = vid
-            if self.logtofile:
-                self.mpegTS[vid]._dumpfname = "{}.bin".format(udp_port)
-            udp_port += 1
-
-    def getSummary(self):
-        ret_str = ""
-        for vid in self.vidOverPCM.vidsPerXidml:
-            ret_str += "Transmitting vid {} to address {} on port {}\n".format(self.mpegTS[vid].name,self.mpegTS[vid].dstip,self.mpegTS[vid].dstudp)
-        return ret_str
-
-
-    def bufferCallBack(self,timeStamp,pwords,wordCount,puserInfo):
-        '''The callback method that is run on every frame'''
-        # This method will take a full PCM frame and return a dict of buffers
-        # one for each VID in the PCM frame
-        vid_bufs = self.vidOverPCM.frameToBuffers(pwords[:wordCount])
-        for vid,buf in vid_bufs.iteritems():
-            #print "Decom frame vid = {}".format(vid)
-            self.mpegTS[vid].addPayload(buf)
-        return 0
 
 
 def main():
@@ -92,7 +52,7 @@ def main():
     logging.info("Read in source xidml")
 
     # I have inherited the basic GTSDec Class so that I can replace the callback function
-    mygtsdec = CustomGTSDecom()                         # A new GtsDec object
+    mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
     mygtsdec.addVidOverPCM(vidxidml)                    # The VidOverPCM object
     mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
     mygtsdec.configureGtsDec(GTSDEC_XIDML,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration

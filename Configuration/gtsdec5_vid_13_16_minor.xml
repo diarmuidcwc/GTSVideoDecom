@@ -1,0 +1,282 @@
+<xidml Version="3.0.0">
+  <Instrumentation>
+    <InstrumentSet>
+      <Instrument Name="MyGeneric PC">
+        <Manufacturer>
+          <Name>Unknown</Name>
+          <PartReference>Generic PC</PartReference>
+        </Manufacturer>
+        <Channels>
+          <Channel VendorName="Ethernet" Direction="Bidirectional">
+            <Settings>
+              <Setting>
+                <Name>IP Address</Name>
+                <Value>192.168.2.1</Value>
+              </Setting>
+            </Settings>
+          </Channel>
+        </Channels>
+        <Instruments>
+          <Location Name="PCM-CIA-Slot(0)" />
+          <Location Name="PCM-CIA-Slot(1)" />
+          <Location Name="PCI-Slot(0)" />
+          <Location Name="PCI-Slot(1)" />
+          <Location Name="PCI-Slot(2)">
+            <Instrument Name="MyCard">
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>GTS/DEC/005/C</PartReference>
+                <SerialNumber>XS9766</SerialNumber>
+              </Manufacturer>
+              <Channels>
+                <Channel VendorName="PCM-In(0)" Direction="Input">
+                  <LinkReference>LinkToPCMIn0</LinkReference>
+                  <Settings>
+                    <Setting>
+                      <Name>Auto Invert Polarity</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Matches To Lock</Name>
+                      <Value>1</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Misses To Loss</Name>
+                      <Value>1</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Sync Word Mask</Name>
+                      <Value>FFFFFFFF</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Sync Word Error Tolerance</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Bit Rate</Name>
+                      <Value>4000000</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Input Type</Name>
+                      <Value>TTL</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Pulse Shape</Name>
+                      <Value>Bessel</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Acquisition Loop Bandwidth</Name>
+                      <Value>0.1</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Alternating Sync Word</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Gain Control Bandwidth</Name>
+                      <Value>100</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Offset Control Bandwidth</Name>
+                      <Value>100</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Sync Word Location</Name>
+                      <Value>Start</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Maximum Stuck Bit Length</Name>
+                      <Value>48</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="Bit-Sync-Out(0)" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Invert Data</Name>
+                      <Value>True</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PCM-In(1)" Direction="Input">
+                  <LinkReference>LinkToPCMIn0</LinkReference>
+                  <Settings>
+                    <Setting>
+                      <Name>Auto Invert Polarity</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Matches To Lock</Name>
+                      <Value>1</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Misses To Loss</Name>
+                      <Value>1</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Sync Word Mask</Name>
+                      <Value>FFFFFFFF</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Sync Word Error Tolerance</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Bit Rate</Name>
+                      <Value>1000000</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Input Type</Name>
+                      <Value>TTL</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Pulse Shape</Name>
+                      <Value>Bessel</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Acquisition Loop Bandwidth</Name>
+                      <Value>0.1</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Alternating Sync Word</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Gain Control Bandwidth</Name>
+                      <Value>100</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Offset Control Bandwidth</Name>
+                      <Value>100</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Sync Word Location</Name>
+                      <Value>Start</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Maximum Stuck Bit Length</Name>
+                      <Value>48</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PCI-Bus" Direction="Input">
+                  <Settings>
+                    <Setting>
+                      <Name>Atomic Transfer Size</Name>
+                      <Value>512</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Maximum Data Latency</Name>
+                      <Value>54</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="IRIG-B-In" Direction="Input">
+                </Channel>
+                <Channel VendorName="Loop-Back" Direction="Output">
+                </Channel>
+                <Channel VendorName="Smart-Out" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Mode</Name>
+                      <Value>PPS-IRIG</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="Status" Orientation="Read">MyCard_Status</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+          <Location Name="PCI-Slot(3)" />
+          <Location Name="PCI-Slot(4)" />
+          <Location Name="PCI-Slot(5)" />
+        </Instruments>
+      </Instrument>
+    </InstrumentSet>
+  </Instrumentation>
+  <Parameters>
+    <ParameterSet>
+      <Parameter Name="MyCard_Status" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+    </ParameterSet>
+  </Parameters>
+  <Links>
+    <LinkSet>
+      <Link Name="LinkToPCMIn0">
+        <Type>PCM</Type>
+        <Packages>
+          <PackageReference>PCMIn0Package</PackageReference>
+        </Packages>
+      </Link>
+    </LinkSet>
+  </Links>
+  <Packages>
+    <PackageSet>
+      <IRIG-106-Ch-4 Name="PCMIn0Package">
+        <PackageRate>1</PackageRate>
+        <Sequencing>
+          <Offset_uS>0</Offset_uS>
+        </Sequencing>        
+        <Properties>
+          <MajorFrameProperties>
+            <BitsPerMinorFrame>4000</BitsPerMinorFrame>
+            <MinorFramesPerMajorFrame>4</MinorFramesPerMajorFrame>
+            <DefaultDataBitsPerWord>16</DefaultDataBitsPerWord>
+            <DefaultMostSignificantBit>First</DefaultMostSignificantBit>
+            <FillPattern>AAAA</FillPattern>
+            <DefaultParity>None</DefaultParity>
+          </MajorFrameProperties>
+          <SynchronizationStrategy>
+            <SyncWord>11111110011010110010100001000000</SyncWord>
+            <SubframeSynchronizationStrategy>
+              <SFID>
+                <MinorFrameOffset_Words>1</MinorFrameOffset_Words>
+                <StartValue>0</StartValue>
+                <Increment>1</Increment>
+                <MostSignificantBit>First</MostSignificantBit>
+                <SizeInBits>16</SizeInBits>
+              </SFID>
+            </SubframeSynchronizationStrategy>
+          </SynchronizationStrategy>
+        </Properties>
+      </IRIG-106-Ch-4>
+    </PackageSet>
+  </Packages>
+</xidml>

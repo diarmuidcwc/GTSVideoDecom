@@ -270,7 +270,7 @@
                 </Setting>
                 <Setting>
                   <Name>Video Resolution</Name>
-                  <Value>CIF</Value>
+                  <Value>D1</Value>
                 </Setting>
                 <Setting>
                   <Name>Video Bit Rate</Name>
@@ -375,7 +375,7 @@
                 </Setting>
                 <Setting>
                   <Name>Video Resolution</Name>
-                  <Value>CIF</Value>
+                  <Value>D1</Value>
                 </Setting>
                 <Setting>
                   <Name>Video Bit Rate</Name>
@@ -476,7 +476,7 @@
                 </Setting>
                 <Setting>
                   <Name>Video Resolution</Name>
-                  <Value>CIF</Value>
+                  <Value>D1</Value>
                 </Setting>
                 <Setting>
                   <Name>GOP Mode</Name>

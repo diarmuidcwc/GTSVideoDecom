@@ -69,7 +69,7 @@ class MpegTS(object):
         else:
             self.payload = payload
             self._alignPayload()
-        if self._dumpfname:
+        if self._dumpfname and self.aligned == True:
             self._dumpToFile(payload)
 
     def _alignPayload(self):
@@ -152,7 +152,7 @@ class MpegTS(object):
         if self.aligned:
             print "INFO: {} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp)
         else:
-            print "WARNING: {} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp)
+            print "WARNING: {} is out of alignment. Stopping UDP transmission".format(self.name,self.dstip,self.dstudp)
 
     def _dumpToFile(self,buf):
         dumpf = open(self._dumpfname,'ab')
