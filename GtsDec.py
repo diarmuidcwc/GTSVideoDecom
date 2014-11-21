@@ -118,12 +118,12 @@ class GtsDec(object):
         self.gtsdecName = gtsdecname
         try:
             command_line = [self._loadSetupBin,self.gtsdecXidml,self.gtsdecName]
-            subprocess.check_call(command_line)
+            progout = subprocess.check_output(command_line)
         except subprocess.CalledProcessError:
             raise Exception("Failed to configure GTS/DEC card")
         except:
             raise Exception("Failed to run {}".format(command_line))
-
+        logging.info(progout)
 
     def openGtsDec(self,serialnumber):
         '''Open a GTS/DEC card in preparation for acquisition.

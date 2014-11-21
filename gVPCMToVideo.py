@@ -28,6 +28,21 @@ import VidOverPCM
 import VideoGTSDecom
 from Tkinter import *
 import tkFileDialog
+import logging
+
+class LoggingToGui(logging.Handler):
+    def __init__(self, widget):
+        logging.Handler.__init__(self)
+        self.setLevel(logging.DEBUG)
+        self.widget = widget
+        self.widget.config(state='disabled')
+
+    def emit(self, record):
+        self.widget.config(state='normal')
+        # Append message (record) to the widget
+        self.widget.insert(END, self.format(record) + '\n')
+        self.widget.see(END)  # Scroll to the bottom
+        self.widget.config(state='disabled')
 
 class MainFrame(Frame):
 
@@ -58,10 +73,16 @@ class MainFrame(Frame):
         self._addMenuBar()
         self._addLabels()
         self._addButtons()
+        self._addConsole()
 
+        self._setupLogging()
+
+    ###################################
+    # Methods to configure the window
+    ###################################
     def initUI(self):
 
-        self.parent.title("Simple")
+        self.parent.title("PCM To Video Server")
 
     def _addMenuBar(self):
         menubar = Menu(self.parent)
@@ -91,7 +112,20 @@ class MainFrame(Frame):
         self.configButton.grid(row=1,column=3)
         self.runButton.grid(row=2,column=3)
 
+    def _addConsole(self):
+        self.console = Text(self.parent,height=10,width=50)
+        self.console.grid(row=10,column=1,columnspan=3)
 
+
+    def _setupLogging(self):
+        self.log = logging.getLogger()
+        self.log.setLevel('DEBUG')
+        ch = LoggingToGui(self.console)
+        ch.setLevel(logging.DEBUG)
+        self.log.addHandler(ch)
+    ###################################
+    # Methods to control the app
+    ###################################
     def onExit(self):
         exit()
 
@@ -107,7 +141,7 @@ class MainFrame(Frame):
             self.vidxidml.parseXidml(fname)
             self.mygtsdec.addVidOverPCM(self.vidxidml)
             for vidname in self.vidxidml.vids:
-                print("Found vid = {}".format(vidname))
+                logging.info("Found vid = {}".format(vidname))
 
         else:
             return 0
@@ -131,7 +165,7 @@ class MainFrame(Frame):
         self.mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
                                                                 # my CustomGTSDecom class
         self.runButton['state'] = 'normal'
- 
+
     def toggleAcqusition(self):
         if self.acquiring == False:
             self.mygtsdec.run()
@@ -147,7 +181,7 @@ class MainFrame(Frame):
 def main():
 
     root = Tk()
-    root.geometry("300x400+300+300")
+    root.geometry("400x400+300+300")
     app = MainFrame(root)
     root.mainloop()
 
