@@ -60,7 +60,7 @@ def main():
     logging.info("GTS/DEC card successfully opened")
     mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
                                                         # my CustomGTSDecom class
-    print mygtsdec.getSummary()
+    print mygtsdec.logSummary()
 
     mygtsdec.run()                          # Run the acquisition
     logging.info("Acquisition running")

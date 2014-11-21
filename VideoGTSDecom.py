@@ -22,7 +22,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import GtsDec
 import MpegTS
+import VidOverPCM
 import datetime
+import logging
 
 
 class VideoGTSDecom(GtsDec.GtsDec):
@@ -32,7 +34,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
 
     def __init__(self):
         super(VideoGTSDecom, self).__init__()
-        self.vidOverPCM = None
+        self.vidOverPCM = VidOverPCM.VidOverPCM()
         self.mpegTS = dict()
         self.logtofile = True
 
@@ -47,11 +49,11 @@ class VideoGTSDecom(GtsDec.GtsDec):
                 self.mpegTS[vid]._dumpfname = "{}_{}.ts".format(sanitisedFname,datetime.datetime.now().strftime("%Y%m%d%H%S"))
             udp_port += 1
 
-    def getSummary(self):
+    def logSummary(self):
         ret_str = ""
         for vid in self.vidOverPCM.vidsPerXidml:
-            ret_str += "Transmitting vid {} to address {} on port {}\n".format(self.mpegTS[vid].name,self.mpegTS[vid].dstip,self.mpegTS[vid].dstudp)
-        return ret_str
+            logging.info("Transmitting vid {} to address {} on port {}\n".format(self.mpegTS[vid].name,self.mpegTS[vid].dstip,self.mpegTS[vid].dstudp))
+
 
 
     def bufferCallBack(self,timeStamp,pwords,wordCount,puserInfo):

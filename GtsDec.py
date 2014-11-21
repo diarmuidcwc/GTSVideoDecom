@@ -24,6 +24,8 @@
 import ctypes
 import os
 import subprocess
+import logging
+
 
 
 
@@ -159,7 +161,7 @@ class GtsDec(object):
 
     def bufferCallBack(self,timeStamp,pwords,wordCount,puserInfo):
         '''The callback method that is run on every frame. This can be overridden to implement custom behaviour'''
-        print "Received {} words".format(wordCount)
+        logging.info("Received {} words".format(wordCount))
         return 0
 
     def bufferCallBack2(self,a,b,c,d):

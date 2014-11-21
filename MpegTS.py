@@ -57,7 +57,7 @@ class MpegTS(object):
 
     def setAlignment(self,status=True):
         self.aligned = status
-        self.printInfo()
+        self.logInfo()
 
     def addPayload(self,payload):
         '''Accept a chunk of data and add it to the existing payload and then send when we have
@@ -140,19 +140,19 @@ class MpegTS(object):
                         self.pids[pid]['continuity'] = ccounter
                         self.pids[pid]['cdrops'] = 0
 
-    def printDiagnostics(self):
+    def logDiagnostics(self):
         for pid in self.pids:
             if pid in MpegTS.PID_TEXT:
                 ptext = MpegTS.PID_TEXT[pid]
             else:
                 ptext = str(pid)
-            print "Vid= {:10s} PID = {:30s} Received = {}({:2}%) Dropped = {}".format(self.name,ptext, self.pids[pid]['count'], (self.pids[pid]['count']*100/self.blocksReceived), self.pids[pid]['cdrops'])
+            logging.debug("Vid= {:10s} PID = {:30s} Received = {}({:2}%) Dropped = {}".format(self.name,ptext, self.pids[pid]['count'], (self.pids[pid]['count']*100/self.blocksReceived), self.pids[pid]['cdrops']))
 
-    def printInfo(self):
+    def logInfo(self):
         if self.aligned:
-            print "INFO: {} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp)
+            logging.info("{} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp))
         else:
-            print "WARNING: {} is out of alignment. Stopping UDP transmission".format(self.name,self.dstip,self.dstudp)
+            logging.warn("{} is out of alignment. Stopping UDP transmission".format(self.name,self.dstip,self.dstudp))
 
     def _dumpToFile(self,buf):
         dumpf = open(self._dumpfname,'ab')
