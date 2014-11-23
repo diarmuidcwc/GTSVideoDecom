@@ -25,7 +25,7 @@
 import os
 import time
 import VidOverPCM
-#import VideoGTSDecom
+import VideoGTSDecom
 from Tkinter import *
 import tkFileDialog
 import logging
@@ -44,11 +44,6 @@ class LoggingToGui(logging.Handler):
         self.widget.see(END)  # Scroll to the bottom
         self.widget.config(state='disabled')
 
-class VideoFrame(Frame,):
-    def __init__(self, parent):
-        Frame.__init__(self, parent, background="white")
-
-
 class MainFrame(Frame):
 
     def __init__(self, parent):
@@ -56,7 +51,7 @@ class MainFrame(Frame):
 
         # The core of the application
         self.vidxidml = VidOverPCM.VidOverPCM()
-        #self.mygtsdec = VideoGTSDecom.VideoGTSDecom()
+        self.mygtsdec = VideoGTSDecom.VideoGTSDecom()
         self.acquiring = False  # current acqusition state
 
         # Settings
@@ -144,7 +139,7 @@ class MainFrame(Frame):
             self.xidmlLabel.set(os.path.basename(fname))
 
             self.vidxidml.parseXidml(fname)
-            #self.mygtsdec.addVidOverPCM(self.vidxidml)
+            self.mygtsdec.addVidOverPCM(self.vidxidml)
             for vidname in self.vidxidml.vids:
                 logging.info("Found vid = {}".format(vidname))
 
