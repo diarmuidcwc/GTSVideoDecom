@@ -11,20 +11,21 @@ in the one frame are supported
 
 Off the shelf video players such as VLC or mplayer can play back this video stream on standard computers
 
-#Requirements#
+##Requirements##
 * Windows XP or Windows 7
 * GTS/DEC decom card with the SDK installed
 * Python 2.7
 * lxml (http://lxml.de/)
 
-#Install#
+##Install##
 Clone this repo to a local directory
 ```
 git clone https://github.com/diarmuidcwc/GTSVideoDecom.git
 ```
 
-#Inputs to Application#
+##Inputs to Application##
 * xidml source file from KSM or DASStudio. This file defines the instruments and the PCM frames
 * xml configuration for the GTS/DEC. This file configures the GTS/DEC instrument
 Sample files are in the Configuration directory
+
 
