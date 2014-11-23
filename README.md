@@ -28,4 +28,12 @@ git clone https://github.com/diarmuidcwc/GTSVideoDecom.git
 * xml configuration for the GTS/DEC. This file configures the GTS/DEC instrument
 Sample files are in the Configuration directory
 
+##Playback##
+This application generates a single UDP stream per video instruments. The application will
+report the destination IP Address and UDP Port for each stream. To playback these streams, run
+VLC or mplayer as follows.
+```
+vlc udp://@235.0.0.1:7777
+mplayer udp://@235.0.0.1:7777 -benchmark
+```
 
