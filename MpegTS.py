@@ -54,10 +54,13 @@ class MpegTS(object):
         self.blocksReceived = 0
         self.name = None
         self._dumpfname = None
+        self._observers = [] # Some callbacks for the alignment state
 
     def setAlignment(self,status=True):
         self.aligned = status
         self.logInfo()
+        for callback in self._observers:
+            callback(self.aligned)
 
     def addPayload(self,payload):
         '''Accept a chunk of data and add it to the existing payload and then send when we have

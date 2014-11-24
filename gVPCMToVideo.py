@@ -30,6 +30,7 @@ from Tkinter import *
 import tkFileDialog
 import logging
 
+
 class LoggingToGui(logging.Handler):
     def __init__(self, widget):
         logging.Handler.__init__(self)
@@ -43,6 +44,53 @@ class LoggingToGui(logging.Handler):
         self.widget.insert(END, self.format(record) + '\n')
         self.widget.see(END)  # Scroll to the bottom
         self.widget.config(state='disabled')
+
+
+
+
+class VidFrame(LabelFrame):
+    def __init__(self, parent, mpegts, startingrow=1):
+        LabelFrame.__init__(self, parent, text=mpegts.name, background="blue")
+
+        self.mpegts = mpegts
+        self.startingrow = startingrow
+
+        self.parent = parent
+        self.udpLabel = StringVar()
+        self.udpLabel.set(self.mpegts.dstudp)
+        self.ipLabel = StringVar()
+        self.ipLabel.set(self.mpegts.dstip)
+
+        self.pack()
+        self._addLabels()
+        self._addAlignmentLabel()
+        self.mpegts._observers.append(self._setAlignment)
+
+
+    def _addLabels(self):
+        udpLabel  = Label(self.parent, text="UDP Port")
+        udpText =  Entry(self.parent, textvariable=self.udpLabel)
+        ipLabel  = Label(self.parent, text="IP Address")
+        ipText =  Entry(self.parent, textvariable=self.ipLabel)
+        udpLabel.grid(row=self.startingrow,column=1)
+        udpText.grid(row=self.startingrow,column=2)
+        ipLabel.grid(row=self.startingrow+1,column=1)
+        ipText.grid(row=self.startingrow+1,column=2)
+
+    def _addAlignmentLabel(self):
+        self.alignmentLabel = Label(self.parent,text="Not Aligned",background="red")
+        self.alignmentLabel.grid(row=self.startingrow+2,column=1,columnspan=3)
+
+    def _setAlignment(self,status):
+        if status:
+            self.alignmentLabel['text'] = "Aligned"
+            self.alignmentLabel['background'] = "green"
+        else:
+            self.alignmentLabel['text'] = "Not Aligned"
+            self.alignmentLabel['background'] = "red"
+
+
+
 
 class MainFrame(Frame):
 
@@ -67,6 +115,7 @@ class MainFrame(Frame):
         self.gtsFName = None
         self.runButton = None
         self.configButton = None
+        self.vidFrames = []
 
         # The init calls
         self.initUI()
@@ -113,8 +162,12 @@ class MainFrame(Frame):
         self.runButton.grid(row=2,column=3)
 
     def _addConsole(self):
+        self.consoleScrollbar = Scrollbar(self.parent)
         self.console = Text(self.parent,height=10,width=50)
-        self.console.grid(row=10,column=1,columnspan=3)
+        self.console.config(yscrollcommand=self.consoleScrollbar.set)
+        self.consoleScrollbar.config(command=self.console.yview)
+        self.console.grid(row=100,column=1,columnspan=3)
+        self.consoleScrollbar.grid(row=100,column=5,sticky=E+N+S)
 
 
     def _setupLogging(self):
@@ -142,6 +195,13 @@ class MainFrame(Frame):
             self.mygtsdec.addVidOverPCM(self.vidxidml)
             for vidname in self.vidxidml.vids:
                 logging.info("Found vid = {}".format(vidname))
+            myrow = 3
+            for mpegts in self.mygtsdec.mpegTS.itervalues():
+                vframe = VidFrame(self.parent,mpegts,myrow)
+                vframe.grid(row=myrow,column=1,columnspan=3)
+                self.vidFrames.append(vframe)
+                myrow += 3
+
 
         else:
             return 0
@@ -181,7 +241,7 @@ class MainFrame(Frame):
 def main():
 
     root = Tk()
-    root.geometry("400x400+300+300")
+    root.geometry("450x400+300+300")
     app = MainFrame(root)
     root.mainloop()
 
