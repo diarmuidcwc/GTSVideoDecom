@@ -32,6 +32,9 @@ import logging
 
 
 class LoggingToGui(logging.Handler):
+    '''
+    Class to send the logging output to a console
+    '''
     def __init__(self, widget):
         logging.Handler.__init__(self)
         self.setLevel(logging.DEBUG)
@@ -74,15 +77,19 @@ class VidFrame(LabelFrame):
         ipLabel  = Label(self, text="IP Address")
         ipText =  Entry(self, textvariable=self.ipLabel)
         udpLabel.grid(row=1,column=1)
-        udpText.grid(row=1,column=2)
+        udpText.grid(row=1,column=2,sticky=E+W)
         ipLabel.grid(row=2,column=1)
-        ipText.grid(row=2,column=2)
+        ipText.grid(row=2,column=2,sticky=E+W)
 
     def _addAlignmentLabel(self):
         self.alignmentLabel = Label(self,text="Not Aligned",background="red")
         self.alignmentLabel.grid(row=3,column=1,columnspan=3)
 
     def _setAlignment(self,status):
+        '''
+        Set the alignment in the GUI
+        :type status: bool
+        '''
         if status:
             self.alignmentLabel['text'] = "Aligned"
             self.alignmentLabel['background'] = "green"
@@ -91,6 +98,10 @@ class VidFrame(LabelFrame):
             self.alignmentLabel['background'] = "red"
 
     def _displayDiagnostics(self,pids):
+        '''
+        Update the diagnostics of the PID display
+        :type pids: dict
+        '''
         myrow=1
         for pid in pids:
             if pid in self.pids:
@@ -209,7 +220,7 @@ class MainFrame(Frame):
             myrow = 3
             for mpegts in self.mygtsdec.mpegTS.itervalues():
                 vframe = VidFrame(self.parent,mpegts)
-                vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W)
+                vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
                 self.vidFrames.append(vframe)
                 myrow += 20
 

@@ -39,6 +39,9 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.logtofile = True
 
     def addVidOverPCM(self,vidoverPCM):
+        '''
+        :type vidoverPCM: VidOverPCM.VidOverPCM
+        '''
         self.vidOverPCM = vidoverPCM
         udp_port = VideoGTSDecom.BASE_UDP_PORT
         for vid in self.vidOverPCM.vidsPerXidml:

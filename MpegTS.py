@@ -25,8 +25,6 @@
 import struct
 import socket
 import logging
-from collections import deque
-import math
 
 
 

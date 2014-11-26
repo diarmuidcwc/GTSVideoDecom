@@ -49,21 +49,28 @@ class GTS_FrameStatusTimeStamp(ctypes.Structure):
 PGTS_FrameStatusTimeStamp = ctypes.POINTER(GTS_FrameStatusTimeStamp)
 
 # The prototype for the callback. Take from the defines. should be good
-BUFFERCALLBACK_PROTO = ctypes.WINFUNCTYPE(
-                    None,                               # Return value
-                    PGTS_FrameStatusTimeStamp,                  # timeStamp
-                    ctypes.POINTER(ctypes.c_ushort),             # words
-                    ctypes.c_uint,                               # wordCount
-                    ctypes.c_void_p                             # userInfo
-                    )
-BUFFERCALLBACK2_PROTO = ctypes.WINFUNCTYPE(
-                    None,                               # Ret Value
-                    PGTS_FrameStatusTimeStamp,                  # timeStamps
-                    ctypes.POINTER(ctypes.POINTER(ctypes.c_ushort)),# frameWords
-                    ctypes.POINTER(ctypes.c_uint),               # frameWordCounts
-                    ctypes.c_uint,                               # frameCount
-                    ctypes.c_void_p                             # userInfo
-                    )
+try:
+    BUFFERCALLBACK_PROTO = ctypes.WINFUNCTYPE(
+                        None,                               # Return value
+                        PGTS_FrameStatusTimeStamp,                  # timeStamp
+                        ctypes.POINTER(ctypes.c_ushort),             # words
+                        ctypes.c_uint,                               # wordCount
+                        ctypes.c_void_p                             # userInfo
+                        )
+    BUFFERCALLBACK2_PROTO = ctypes.WINFUNCTYPE(
+                        None,                               # Ret Value
+                        PGTS_FrameStatusTimeStamp,                  # timeStamps
+                        ctypes.POINTER(ctypes.POINTER(ctypes.c_ushort)),# frameWords
+                        ctypes.POINTER(ctypes.c_uint),               # frameWordCounts
+                        ctypes.c_uint,                               # frameCount
+                        ctypes.c_void_p                             # userInfo
+                        )
+except:
+    logging.error("Cannot define Windows functions. Are you on Windows?")
+    BUFFERCALLBACK_PROTO = ctypes.CFUNCTYPE(None,PGTS_FrameStatusTimeStamp,ctypes.POINTER(ctypes.c_ushort),
+                                            ctypes.c_uint,ctypes.c_void_p)
+    BUFFERCALLBACK2_PROTO = ctypes.CFUNCTYPE(None,PGTS_FrameStatusTimeStamp,ctypes.POINTER(ctypes.POINTER(ctypes.c_ushort)),
+                                            ctypes.POINTER(ctypes.c_uint),ctypes.c_uint,ctypes.c_void_p)
 
 class BufferCallBackStruct(ctypes.Structure):
     _fields_ = [("bufferCallBack" , BUFFERCALLBACK_PROTO),
@@ -103,7 +110,9 @@ class GtsDec(object):
         self._loadSetupBin = "bin/gts_setup_clr.exe"
 
     def setDLLPath(self,dllpath):
-        '''Setup and verify the path to the gtsdecw.dll file'''
+        '''Setup and verify the path to the gtsdecw.dll file
+        :type dllpath: str
+        '''
         if not os.path.exists(dllpath):
             raise IOError("{} not found".format(dllpath))
         self.gtsdecwDLLPath = dllpath
@@ -111,7 +120,10 @@ class GtsDec(object):
 
 
     def configureGtsDec(self,xidml,gtsdecname):
-        '''Load a xidml to configure the GTS/DEC and specify the name of the GTS/DEC card'''
+        '''Load a xidml to configure the GTS/DEC and specify the name of the GTS/DEC card
+        :type xidml: str
+        :type gtsdecname: str
+        '''
         if not os.path.exists(xidml):
             raise IOError("{} not found".format(xidml))
         self.gtsdecXidml = xidml
@@ -127,7 +139,9 @@ class GtsDec(object):
 
     def openGtsDec(self,serialnumber):
         '''Open a GTS/DEC card in preparation for acquisition.
-        The serial number passed is that of the GTS/DEC card installed'''
+        The serial number passed is that of the GTS/DEC card installed
+        :type serialnumber: str
+        '''
         try:
             ret = self.gtsdecw.OpenStringSerial(ctypes.c_char_p(serialnumber), ctypes.byref(self._handle) )
         except:

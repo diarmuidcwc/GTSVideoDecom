@@ -53,7 +53,9 @@ class VidOverPCM():
         self._allVidParams = dict()
 
     def parseXidml(self,xidml):
-        '''Parse a xidml2.4 file and setup the VidOverPCM class'''
+        '''Parse a xidml2.4 file and setup the VidOverPCM class
+        :type xidml: str
+        '''
         try:
             self.tree = etree.parse(xidml)
             self.root = self.tree.getroot()
@@ -78,7 +80,9 @@ class VidOverPCM():
 
 
     def frameToBuffers(self,listofwords):
-        '''Takes a buffer containing a major frame and returns a list of buffers of MPEG_TS'''
+        '''Takes a buffer containing a major frame and returns a list of buffers of MPEG_TS
+        :type listofwords: list(str)
+        '''
         vid_bufs = {}
         #print "DEBUG: list of words len = {}".format(len(listofwords))
         for vid in self.vids:
