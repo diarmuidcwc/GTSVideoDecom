@@ -26,6 +26,7 @@ import os
 import time
 import VidOverPCM
 import VideoGTSDecom
+import MpegTS
 from Tkinter import *
 import tkFileDialog
 import logging
@@ -53,6 +54,10 @@ class LoggingToGui(logging.Handler):
 
 class VidFrame(LabelFrame):
     def __init__(self, parent, mpegts):
+        '''
+        :type parent:
+        :type mpegts: MpegTS.MpegTS
+        '''
         LabelFrame.__init__(self, parent, text=mpegts.name)
 
         self.mpegts = mpegts
@@ -72,6 +77,9 @@ class VidFrame(LabelFrame):
 
 
     def _addLabels(self):
+        '''
+        Add all the labels to the Video Frame
+        '''
         udpLabel  = Label(self, text="UDP Port")
         udpText =  Entry(self, textvariable=self.udpLabel)
         ipLabel  = Label(self, text="IP Address")
@@ -82,8 +90,12 @@ class VidFrame(LabelFrame):
         ipText.grid(row=2,column=2,sticky=E+W)
 
     def _addAlignmentLabel(self):
+        '''
+        Add the alignment label
+        :return:
+        '''
         self.alignmentLabel = Label(self,text="Not Aligned",background="red")
-        self.alignmentLabel.grid(row=3,column=1,columnspan=3)
+        self.alignmentLabel.grid(row=3,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
 
     def _setAlignment(self,status):
         '''
@@ -117,7 +129,7 @@ class VidFrame(LabelFrame):
 class MainFrame(Frame):
 
     def __init__(self, parent):
-        Frame.__init__(self, parent, background="white")
+        Frame.__init__(self, parent)
 
         # The core of the application
         self.vidxidml = VidOverPCM.VidOverPCM()
@@ -147,6 +159,7 @@ class MainFrame(Frame):
         self._addConsole()
 
         self._setupLogging()
+
 
     ###################################
     # Methods to configure the window
@@ -221,6 +234,7 @@ class MainFrame(Frame):
             for mpegts in self.mygtsdec.mpegTS.itervalues():
                 vframe = VidFrame(self.parent,mpegts)
                 vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
+                vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
                 self.vidFrames.append(vframe)
                 myrow += 20
 
@@ -266,7 +280,7 @@ class MainFrame(Frame):
 def main():
 
     root = Tk()
-    root.geometry("450x400+300+300")
+    root.geometry("600x700+100+100")
     app = MainFrame(root)
     root.mainloop()
 
