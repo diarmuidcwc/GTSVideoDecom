@@ -49,37 +49,38 @@ class LoggingToGui(logging.Handler):
 
 
 class VidFrame(LabelFrame):
-    def __init__(self, parent, mpegts, startingrow=1):
-        LabelFrame.__init__(self, parent, text=mpegts.name, background="blue")
+    def __init__(self, parent, mpegts):
+        LabelFrame.__init__(self, parent, text=mpegts.name)
 
         self.mpegts = mpegts
-        self.startingrow = startingrow
 
         self.parent = parent
         self.udpLabel = StringVar()
         self.udpLabel.set(self.mpegts.dstudp)
         self.ipLabel = StringVar()
         self.ipLabel.set(self.mpegts.dstip)
+        self.pids = dict()
 
         self.pack()
         self._addLabels()
         self._addAlignmentLabel()
-        self.mpegts._observers.append(self._setAlignment)
+        self.mpegts._alignmentObservers.append(self._setAlignment)
+        self.mpegts._diagnosticObservers.append(self._displayDiagnostics)
 
 
     def _addLabels(self):
-        udpLabel  = Label(self.parent, text="UDP Port")
-        udpText =  Entry(self.parent, textvariable=self.udpLabel)
-        ipLabel  = Label(self.parent, text="IP Address")
-        ipText =  Entry(self.parent, textvariable=self.ipLabel)
-        udpLabel.grid(row=self.startingrow,column=1)
-        udpText.grid(row=self.startingrow,column=2)
-        ipLabel.grid(row=self.startingrow+1,column=1)
-        ipText.grid(row=self.startingrow+1,column=2)
+        udpLabel  = Label(self, text="UDP Port")
+        udpText =  Entry(self, textvariable=self.udpLabel)
+        ipLabel  = Label(self, text="IP Address")
+        ipText =  Entry(self, textvariable=self.ipLabel)
+        udpLabel.grid(row=1,column=1)
+        udpText.grid(row=1,column=2)
+        ipLabel.grid(row=2,column=1)
+        ipText.grid(row=2,column=2)
 
     def _addAlignmentLabel(self):
-        self.alignmentLabel = Label(self.parent,text="Not Aligned",background="red")
-        self.alignmentLabel.grid(row=self.startingrow+2,column=1,columnspan=3)
+        self.alignmentLabel = Label(self,text="Not Aligned",background="red")
+        self.alignmentLabel.grid(row=3,column=1,columnspan=3)
 
     def _setAlignment(self,status):
         if status:
@@ -89,8 +90,18 @@ class VidFrame(LabelFrame):
             self.alignmentLabel['text'] = "Not Aligned"
             self.alignmentLabel['background'] = "red"
 
-
-
+    def _displayDiagnostics(self,pids):
+        myrow=1
+        for pid in pids:
+            if pid in self.pids:
+                self.pids[pid]['countText'].delete(0,END)
+                self.pids[pid]['countText'].insert(0,pids[pid]['count'])
+            else:
+                self.pids[pid] = dict()
+                Label(self,text=pid).grid(row=myrow,column=3)
+                self.pids[pid]['countText'] = Entry(self, text=pids[pid]['count'])
+                self.pids[pid]['countText'].grid(row=myrow,column=4)
+            myrow += 1
 
 class MainFrame(Frame):
 
@@ -197,10 +208,10 @@ class MainFrame(Frame):
                 logging.info("Found vid = {}".format(vidname))
             myrow = 3
             for mpegts in self.mygtsdec.mpegTS.itervalues():
-                vframe = VidFrame(self.parent,mpegts,myrow)
-                vframe.grid(row=myrow,column=1,columnspan=3)
+                vframe = VidFrame(self.parent,mpegts)
+                vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W)
                 self.vidFrames.append(vframe)
-                myrow += 3
+                myrow += 20
 
 
         else:

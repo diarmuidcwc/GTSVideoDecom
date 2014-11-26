@@ -89,6 +89,9 @@ class VidOverPCM():
             _buffertmp = {}
             for p_index,param in enumerate(natural_sort(params)):
                 for wd_index,word_offset in enumerate(params[param]):
+                    # bounds check
+                    if word_offset > len(listofwords):
+                        raise ValueError "List of words not long enough .Are you using the correct xidml source file?"
                     _buffertmp[(wd_index*numberOfParams)+p_index] = struct.pack('>H',listofwords[word_offset])
 
             # Now convert the dict back into string buffers

@@ -54,12 +54,13 @@ class MpegTS(object):
         self.blocksReceived = 0
         self.name = None
         self._dumpfname = None
-        self._observers = [] # Some callbacks for the alignment state
+        self._alignmentObservers = [] # Some callbacks for the alignment state
+        self._diagnosticObservers = [] # Call back of diagnostics output
 
     def setAlignment(self,status=True):
         self.aligned = status
         self.logInfo()
-        for callback in self._observers:
+        for callback in self._alignmentObservers:
             callback(self.aligned)
 
     def addPayload(self,payload):
@@ -137,11 +138,17 @@ class MpegTS(object):
                             self.pids[pid]['continuity'] = ccounter
                         else:
                             self.pids[pid]['continuity'] = ccounter
+
+                        for callback in self._diagnosticObservers:
+                            callback(self.pids)
+
                     else:
                         self.pids[pid] = dict()
                         self.pids[pid]['count'] = 1
                         self.pids[pid]['continuity'] = ccounter
                         self.pids[pid]['cdrops'] = 0
+
+
 
     def logDiagnostics(self):
         for pid in self.pids:
