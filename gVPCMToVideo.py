@@ -229,13 +229,16 @@ class MainFrame(Frame):
 
 
     def setupGTSDec(self):
-        self.mygtsdec.setDLLPath(self.dllpath)                       # Pass the dll path
-        self.mygtsdec.configureGtsDec(self.gtsFName,self.gtsDecName)  # Configure the GTS DEC card with the frame configuration
-        self.mygtsdec.openGtsDec(self.gtsdecSerialNum)              # Open the card by serial number
-        #logging.info("GTS/DEC card successfully opened")
-        self.mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
-                                                                # my CustomGTSDecom class
-        self.runButton['state'] = 'normal'
+        try:
+            self.mygtsdec.setDLLPath(self.dllpath)                       # Pass the dll path
+            self.mygtsdec.configureGtsDec(self.gtsFName,self.gtsDecName)  # Configure the GTS DEC card with the frame configuration
+            self.mygtsdec.openGtsDec(self.gtsdecSerialNum)              # Open the card by serial number
+            #logging.info("GTS/DEC card successfully opened")
+            self.mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
+                                                                    # my CustomGTSDecom class
+            self.runButton['state'] = 'normal'
+        except:
+            logging.error("Failed to program GTS/DEC {} with configuration {}".format(self.gtsDecName,self.gtsFName))
 
     def toggleAcqusition(self):
         if self.acquiring == False:
