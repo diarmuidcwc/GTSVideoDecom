@@ -36,7 +36,7 @@ class MpegTS(object):
     MPEG_TS_BLOCKS_PER_PACKET = 7
     MPEG_TS_BLOCK_LEN = 188
     UDP_PAYLOAD_LEN = MPEG_TS_BLOCKS_PER_PACKET * MPEG_TS_BLOCK_LEN
-    PID_TEXT = {0x1fff : "Null", 0x0 : "Program Association Table", 0x100 : "VID106_Video" , 0x101 : "VID106_Audio", 0x1000 : "Program Map Table"}
+    PID_TEXT = {0x1fff : "Null", 0x0 : "Program Association Table", 0x100 : "VID106_Video" , 0x101 : "VID106_Audio", 0x1000 : "Program Map Table", 0x3E8 : "VID103_Video", 0x20 : "Unkn"}
 
     def __init__(self,ipaddress="192.168.28.110",udpport=777):
         #super(MpegTS,self).__init__()
@@ -137,8 +137,7 @@ class MpegTS(object):
                         else:
                             self.pids[pid]['continuity'] = ccounter
 
-                        for callback in self._diagnosticObservers:
-                            callback(self.pids)
+
 
                     else:
                         self.pids[pid] = dict()
@@ -146,6 +145,8 @@ class MpegTS(object):
                         self.pids[pid]['continuity'] = ccounter
                         self.pids[pid]['cdrops'] = 0
 
+                    for callback in self._diagnosticObservers:
+                            callback(self.pids)
 
 
     def logDiagnostics(self):

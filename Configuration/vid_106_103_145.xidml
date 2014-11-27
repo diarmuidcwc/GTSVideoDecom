@@ -1,0 +1,634 @@
+<xidml Version="3.0.0">
+  <Instrumentation>
+    <InstrumentSet>
+      <Instrument Name="KAM_CHS_13U_0">
+        <Manufacturer>
+          <Name>ACRA CONTROL</Name>
+          <PartReference>KAM/CHS/13U</PartReference>
+          <SerialNumber>
+          </SerialNumber>
+        </Manufacturer>
+        <Instruments>
+          <Location Name="2">
+            <Instrument Name="MyKAD_BCU_145">
+              <Documentation>
+                <LongDescription>Ethernet backplane controller - IENA/iNET-X compatible dual port output, PTP v1 or v2 client or PTP v1 Grandmaster on primary port</LongDescription>
+                <CreatedDate>11/26/2014 14:16:25</CreatedDate>
+              </Documentation>
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>KAD/BCU/145</PartReference>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>Is Leap Year</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>Shunt Mode</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>IP Address</Name>
+                  <Value>192.168.28.21</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTP Leap Seconds</Name>
+                  <Value>35</Value>
+                </Setting>
+                <Setting>
+                  <Name>Synchronisation Level</Name>
+                  <Value>500</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTP Grandmaster</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv1 Sync Interval</Name>
+                  <Value>2</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv1 Subdomain</Name>
+                  <Value>_DFLT</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTP Protocol</Name>
+                  <Value>PTPv2 Delay P2P</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv2 Subdomain</Name>
+                  <Value>0</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="Ethernet(0)" Direction="Output">
+                  <LinkReference>KAM_CHS_13U_0_Packetizing</LinkReference>
+                  <Settings>
+                    <Setting>
+                      <Name>Link Speed</Name>
+                      <Value>100 Base-TX</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="Ethernet(1)" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Link Speed</Name>
+                      <Value>100 Base-TX</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PPSOut" Direction="Output">
+                </Channel>
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="DayOfYear" Orientation="Read">P_MyKAD_BCU_145_DayOfYear</ParameterReference>
+                <ParameterReference VendorName="IrigTime48" Orientation="Read">P_MyKAD_BCU_145_IrigTime48</ParameterReference>
+                <ParameterReference VendorName="Report" Orientation="Read">P_MyKAD_BCU_145_Report</ParameterReference>
+                <ParameterReference VendorName="ShuntValue" Orientation="Read">P_MyKAD_BCU_145_ShuntValue</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+          <Location Name="7">
+            <Instrument Name="KAD_ENC_106_0">
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>KAD/ENC/106</PartReference>
+                <SerialNumber>XF2063</SerialNumber>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>Word Pulse Enable</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>Minor Pulse Enable</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>EXT Enable</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>Major Pulse Enable</Name>
+                  <Value>True</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="PCM-Out(0)" Direction="Output">
+                  <LinkReference>Link_KAD_ENC_106_0_PCM-Out(0)</LinkReference>
+                  <Settings>
+                    <Setting>
+                      <Name>Pcm Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>DCLK Enable</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Enable</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Bit Rate</Name>
+                      <Value>4800000</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Stream Id</Name>
+                      <Value>FFFFFFFF</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packetization Enabled</Name>
+                      <Value>False</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PCM-Out(1)" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Pcm Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>DCLK Enable</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Enable</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Bit Rate</Name>
+                      <Value>1000000</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Stream Id</Name>
+                      <Value>FFFFFFFF</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packetization Enabled</Name>
+                      <Value>False</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PMF-Out" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Amplitude</Name>
+                      <Value>4</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Enabled</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Output</Name>
+                      <Value>A</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+              </Channels>
+            </Instrument>
+          </Location>
+          <Location Name="9">
+            <Instrument Name="KAD_VID_106_0">
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>KAD/VID/106</PartReference>
+                <SerialNumber>YM8028</SerialNumber>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>Encapsulation Mode</Name>
+                  <Value>FIFO</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Format</Name>
+                  <Value>PAL</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Source</Name>
+                  <Value>Test</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Timer On</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>Text Color</Name>
+                  <Value>White</Value>
+                </Setting>
+                <Setting>
+                  <Name>Background Style</Name>
+                  <Value>None</Value>
+                </Setting>
+                <Setting>
+                  <Name>Horizontal Placement</Name>
+                  <Value>40</Value>
+                </Setting>
+                <Setting>
+                  <Name>Vertical Placement</Name>
+                  <Value>40</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Resolution</Name>
+                  <Value>D1</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Bit Rate</Name>
+                  <Value>1 Mbps</Value>
+                </Setting>
+                <Setting>
+                  <Name>GOP Mode</Name>
+                  <Value>1:15</Value>
+                </Setting>
+                <Setting>
+                  <Name>Frame Rate</Name>
+                  <Value>25</Value>
+                </Setting>
+                <Setting>
+                  <Name>Audio Setting</Name>
+                  <Value>None</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="CVBS_IN(0)" Direction="Input" />
+                <Channel VendorName="CVBS_IN(1)" Direction="Input" />
+                <Channel VendorName="CVBS_IN(2)" Direction="Input" />
+                <Channel VendorName="Y/C_IN" Direction="Input" />
+                <Channel VendorName="CameraGenLock(0)" Direction="Output" />
+                <Channel VendorName="CameraGenLock(1)" Direction="Output" />
+                <Channel VendorName="CameraSelect(0)" Direction="Input" />
+                <Channel VendorName="CameraSelect(1)" Direction="Input" />
+                <Channel VendorName="CameraSelect(2)" Direction="Input" />
+                <Channel VendorName="VideoCopyOut(0)" Direction="Output" />
+                <Channel VendorName="VideoCopyOut(1)" Direction="Output" />
+                <Channel VendorName="MPEG2TSIn" Direction="Input">
+                  <Settings>
+                    <Setting>
+                      <Name>Stream Id</Name>
+                      <Value>FFFFFFFF</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packetization Enabled</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packet Size</Name>
+                      <Value>665</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packet Timeout</Name>
+                      <Value>40</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packetization Type</Name>
+                      <Value>Block</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="MPEG2TS" Orientation="Read">P_KAD_VID_106_0_MPEG2TS</ParameterReference>
+                <ParameterReference VendorName="Report" Orientation="Read">P_KAD_VID_106_0_Report</ParameterReference>
+                <ParameterReference VendorName="DebugInfo" Orientation="Read">P_KAD_VID_106_0_DebugInfo</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+          <Location Name="11">
+            <Instrument Name="KAD_VID_106_1">
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>KAD/VID/106</PartReference>
+                <SerialNumber>ZL8257</SerialNumber>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>Encapsulation Mode</Name>
+                  <Value>FIFO</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Format</Name>
+                  <Value>PAL</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Source</Name>
+                  <Value>Test</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Timer On</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>Text Color</Name>
+                  <Value>Black</Value>
+                </Setting>
+                <Setting>
+                  <Name>Background Style</Name>
+                  <Value>Solid</Value>
+                </Setting>
+                <Setting>
+                  <Name>Horizontal Placement</Name>
+                  <Value>40</Value>
+                </Setting>
+                <Setting>
+                  <Name>Vertical Placement</Name>
+                  <Value>40</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Resolution</Name>
+                  <Value>D1</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Bit Rate</Name>
+                  <Value>1 Mbps</Value>
+                </Setting>
+                <Setting>
+                  <Name>GOP Mode</Name>
+                  <Value>1:15</Value>
+                </Setting>
+                <Setting>
+                  <Name>Frame Rate</Name>
+                  <Value>25</Value>
+                </Setting>
+                <Setting>
+                  <Name>Audio Setting</Name>
+                  <Value>None</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="CVBS_IN(0)" Direction="Input" />
+                <Channel VendorName="CVBS_IN(1)" Direction="Input" />
+                <Channel VendorName="CVBS_IN(2)" Direction="Input" />
+                <Channel VendorName="Y/C_IN" Direction="Input" />
+                <Channel VendorName="CameraGenLock(0)" Direction="Output" />
+                <Channel VendorName="CameraGenLock(1)" Direction="Output" />
+                <Channel VendorName="CameraSelect(0)" Direction="Input" />
+                <Channel VendorName="CameraSelect(1)" Direction="Input" />
+                <Channel VendorName="CameraSelect(2)" Direction="Input" />
+                <Channel VendorName="VideoCopyOut(0)" Direction="Output" />
+                <Channel VendorName="VideoCopyOut(1)" Direction="Output" />
+                <Channel VendorName="MPEG2TSIn" Direction="Input">
+                  <Settings>
+                    <Setting>
+                      <Name>Stream Id</Name>
+                      <Value>FFFFFFFF</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packetization Enabled</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packet Size</Name>
+                      <Value>665</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packet Timeout</Name>
+                      <Value>40</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packetization Type</Name>
+                      <Value>Block</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="MPEG2TS" Orientation="Read">P_KAD_VID_106_1_MPEG2TS</ParameterReference>
+                <ParameterReference VendorName="Report" Orientation="Read">P_KAD_VID_106_1_Report</ParameterReference>
+                <ParameterReference VendorName="DebugInfo" Orientation="Read">P_KAD_VID_106_1_DebugInfo</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+          <Location Name="15">
+            <Instrument Name="KAD_VID_103_0">
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>KAD/VID/103</PartReference>
+                <SerialNumber>VC8512</SerialNumber>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>Video Format</Name>
+                  <Value>PAL</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Source</Name>
+                  <Value>CVBS_IN(0)</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Timer On</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>Background Color</Name>
+                  <Value>Black</Value>
+                </Setting>
+                <Setting>
+                  <Name>Background Style</Name>
+                  <Value>Solid</Value>
+                </Setting>
+                <Setting>
+                  <Name>Horizontal Placement</Name>
+                  <Value>40</Value>
+                </Setting>
+                <Setting>
+                  <Name>Vertical Placement</Name>
+                  <Value>40</Value>
+                </Setting>
+                <Setting>
+                  <Name>Video Resolution</Name>
+                  <Value>D1</Value>
+                </Setting>
+                <Setting>
+                  <Name>GOP Mode</Name>
+                  <Value>1:5</Value>
+                </Setting>
+                <Setting>
+                  <Name>Frame Rate PAL</Name>
+                  <Value>25</Value>
+                </Setting>
+                <Setting>
+                  <Name>Frame Rate NTSC  </Name>
+                  <Value>30</Value>
+                </Setting>
+                <Setting>
+                  <Name>Audio Setting</Name>
+                  <Value>None</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="CVBS_IN(0)" Direction="Input" />
+                <Channel VendorName="CVBS_IN(1)" Direction="Input" />
+                <Channel VendorName="CVBS_IN(2)" Direction="Input" />
+                <Channel VendorName="YC(0)" Direction="Input" />
+                <Channel VendorName="AudioLeftIn(0)" Direction="Input" />
+                <Channel VendorName="AudioRightIn(0)" Direction="Input" />
+                <Channel VendorName="CameraGenLock(0)" Direction="Output" />
+                <Channel VendorName="CameraGenLock(1)" Direction="Output" />
+                <Channel VendorName="CameraSelect(0)" Direction="Input" />
+                <Channel VendorName="CameraSelect(1)" Direction="Input" />
+                <Channel VendorName="CameraSelect(2)" Direction="Input" />
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="Video" Orientation="Read">P_KAD_VID_103_0_Video</ParameterReference>
+                <ParameterReference VendorName="Report" Orientation="Read">P_KAD_VID_103_0_Report</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+        </Instruments>
+      </Instrument>
+    </InstrumentSet>
+  </Instrumentation>
+  <Parameters>
+    <ParameterSet>
+      <Parameter Name="P_MyKAD_BCU_145_DayOfYear" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyKAD_BCU_145_IrigTime48" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>48</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyKAD_BCU_145_Report" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyKAD_BCU_145_ShuntValue" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_106_0_MPEG2TS" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_106_0_Report" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_106_0_DebugInfo" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_106_1_MPEG2TS" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_106_1_Report" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_106_1_DebugInfo" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_103_0_Video" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_KAD_VID_103_0_Report" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+    </ParameterSet>
+  </Parameters>
+  <Links>
+    <LinkSet>
+      <Link Name="Link_KAD_ENC_106_0_PCM-Out(0)">
+        <Type>PCM</Type>
+        <Packages>
+          <PackageReference>MyIRIG-106-Ch-4Package_1</PackageReference>
+        </Packages>
+      </Link>
+      <Link Name="KAM_CHS_13U_0_Packetizing">
+        <Type>Ethernet</Type>
+      </Link>
+    </LinkSet>
+  </Links>
+  <Packages>
+    <PackageSet>
+      <IRIG-106-Ch-4 Name="MyIRIG-106-Ch-4Package_1">
+        <PackageRate>200</PackageRate>
+        <Properties>
+          <MajorFrameProperties>
+            <BitsPerMinorFrame>24000</BitsPerMinorFrame>
+            <MinorFramesPerMajorFrame>1</MinorFramesPerMajorFrame>
+            <DefaultDataBitsPerWord>16</DefaultDataBitsPerWord>
+            <DefaultMostSignificantBit>First</DefaultMostSignificantBit>
+            <FillPattern>AAAA</FillPattern>
+            <DefaultParity>None</DefaultParity>
+          </MajorFrameProperties>
+          <SynchronizationStrategy>
+            <SyncWord>11111110011010110010100001000000</SyncWord>
+            <SubframeSynchronizationStrategy>
+              <SFID>
+                <MinorFrameOffset_Words>1</MinorFrameOffset_Words>
+                <StartValue>0</StartValue>
+                <Increment>1</Increment>
+                <MostSignificantBit>First</MostSignificantBit>
+                <Justification>Left</Justification>
+                <SizeInBits>16</SizeInBits>
+              </SFID>
+            </SubframeSynchronizationStrategy>
+          </SynchronizationStrategy>
+        </Properties>
+        <Content>
+          <Mapping>
+            <ParameterReference>P_KAD_VID_103_0_Video</ParameterReference>
+            <Location>
+              <MinorFrameNumber>1</MinorFrameNumber>
+              <Offset_Words>6</Offset_Words>
+              <Occurrences>350</Occurrences>
+            </Location>
+          </Mapping>
+          <Mapping>
+            <ParameterReference>P_KAD_VID_106_0_MPEG2TS</ParameterReference>
+            <Location>
+              <MinorFrameNumber>1</MinorFrameNumber>
+              <Offset_Words>7</Offset_Words>
+              <Occurrences>350</Occurrences>
+            </Location>
+          </Mapping>
+          <Mapping>
+            <ParameterReference>P_KAD_VID_106_1_MPEG2TS</ParameterReference>
+            <Location>
+              <MinorFrameNumber>1</MinorFrameNumber>
+              <Offset_Words>8</Offset_Words>
+              <Occurrences>350</Occurrences>
+            </Location>
+          </Mapping>
+        </Content>
+      </IRIG-106-Ch-4>
+    </PackageSet>
+  </Packages>
+</xidml>

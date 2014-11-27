@@ -30,6 +30,7 @@ import MpegTS
 from Tkinter import *
 import tkFileDialog
 import logging
+import pprint
 
 
 class LoggingToGui(logging.Handler):
@@ -67,7 +68,7 @@ class VidFrame(LabelFrame):
         self.udpLabel.set(self.mpegts.dstudp)
         self.ipLabel = StringVar()
         self.ipLabel.set(self.mpegts.dstip)
-        self.pids = dict()
+        self.pids = dict() # dict of pids with StringVars
 
         self.pack()
         self._addLabels()
@@ -95,7 +96,8 @@ class VidFrame(LabelFrame):
         :return:
         '''
         self.alignmentLabel = Label(self,text="Not Aligned",background="red")
-        self.alignmentLabel.grid(row=3,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
+        self.alignmentLabel.grid(row=3,column=1,columnspan=2,sticky=E+W,pady=10,padx=10)
+
 
     def _setAlignment(self,status):
         '''
@@ -114,17 +116,21 @@ class VidFrame(LabelFrame):
         Update the diagnostics of the PID display
         :type pids: dict
         '''
-        myrow=1
-        for pid in pids:
+        for pid in sorted(pids):
             if pid in self.pids:
-                self.pids[pid]['countText'].delete(0,END)
-                self.pids[pid]['countText'].insert(0,pids[pid]['count'])
+                self.pids[pid]['countEntryVar'].set(pids[pid]['count'])
             else:
+                add_row = len(self.pids)+1
+                try:
+                    textPID = MpegTS.MpegTS.PID_TEXT[pid]
+                except:
+                    textPID = pid
                 self.pids[pid] = dict()
-                Label(self,text=pid).grid(row=myrow,column=3)
-                self.pids[pid]['countText'] = Entry(self, text=pids[pid]['count'])
-                self.pids[pid]['countText'].grid(row=myrow,column=4)
-            myrow += 1
+                Label(self,text=textPID).grid(row=add_row,column=3)
+                self.pids[pid]['countEntryVar'] = StringVar()
+                self.pids[pid]['countEntry'] = Entry(self, textvariable=self.pids[pid]['countEntryVar'])
+                self.pids[pid]['countEntry'].grid(row=add_row,column=4)
+
 
 class MainFrame(Frame):
 
@@ -191,6 +197,7 @@ class MainFrame(Frame):
     def _addButtons(self):
         self.configButton = Button(self.parent,text="Configure GTS/DEC",command=self.setupGTSDec,state=DISABLED)
         self.runButton = Button(self.parent,text="Run Acqusition",command=self.toggleAcqusition,state=DISABLED)
+
 
         # place them
         self.configButton.grid(row=1,column=3)
