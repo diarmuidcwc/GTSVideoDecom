@@ -177,6 +177,7 @@ class MainFrame(Frame):
         # The core of the application
         self.vidxidml = VidOverPCM.VidOverPCM()
         self.mygtsdec = VideoGTSDecom.VideoGTSDecom()
+        self.mygtsdec.logtofile = False
         self.acquiring = False  # current acqusition state
         self.xidmlFName = None
         self.gtsFName = None
