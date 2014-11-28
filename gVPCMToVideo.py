@@ -73,6 +73,7 @@ class VidFrame(LabelFrame):
         self.pack()
         self._addLabels()
         self._addAlignmentLabel()
+        self._addDiagnostics()
         self.mpegts._alignmentObservers.append(self._setAlignment)
         self.mpegts._diagnosticObservers.append(self._displayDiagnostics)
 
@@ -111,6 +112,11 @@ class VidFrame(LabelFrame):
             self.alignmentLabel['text'] = "Not Aligned"
             self.alignmentLabel['background'] = "red"
 
+    def _addDiagnostics(self):
+        Label(self,text="PID").grid(row=1,column=3)
+        Label(self,text="Blocks Received").grid(row=1,column=4)
+        Label(self,text="Dropped Blocks").grid(row=1,column=5)
+
     def _displayDiagnostics(self,pids):
         '''
         Update the diagnostics of the PID display
@@ -119,17 +125,21 @@ class VidFrame(LabelFrame):
         for pid in sorted(pids):
             if pid in self.pids:
                 self.pids[pid]['countEntryVar'].set(pids[pid]['count'])
+                self.pids[pid]['dropEntryVar'].set(pids[pid]['cdrops'])
             else:
-                add_row = len(self.pids)+1
+                add_row = len(self.pids)+2
                 try:
                     textPID = MpegTS.MpegTS.PID_TEXT[pid]
                 except:
                     textPID = pid
                 self.pids[pid] = dict()
-                Label(self,text=textPID).grid(row=add_row,column=3)
+                Label(self,text=textPID).grid(row=add_row,column=3,sticky=E+W)
                 self.pids[pid]['countEntryVar'] = StringVar()
                 self.pids[pid]['countEntry'] = Entry(self, textvariable=self.pids[pid]['countEntryVar'])
                 self.pids[pid]['countEntry'].grid(row=add_row,column=4)
+                self.pids[pid]['dropEntryVar'] = StringVar()
+                self.pids[pid]['dropEntry'] = Entry(self, textvariable=self.pids[pid]['dropEntryVar'])
+                self.pids[pid]['dropEntry'].grid(row=add_row,column=5)
 
 
 class MainFrame(Frame):
@@ -137,10 +147,7 @@ class MainFrame(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
-        # The core of the application
-        self.vidxidml = VidOverPCM.VidOverPCM()
-        self.mygtsdec = VideoGTSDecom.VideoGTSDecom()
-        self.acquiring = False  # current acqusition state
+        self._initStructures()
 
         # Settings
         self.dllpath    = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
@@ -150,9 +157,8 @@ class MainFrame(Frame):
         # The windowing aspects
         self.parent = parent
         self.xidmlLabel = StringVar()
-        self.xidmlFName = None
         self.gtsLabel = StringVar()
-        self.gtsFName = None
+
         self.runButton = None
         self.configButton = None
         self.vidFrames = []
@@ -166,6 +172,14 @@ class MainFrame(Frame):
 
         self._setupLogging()
 
+    # Create some init structures that are called on creation and on loading a new xidml
+    def _initStructures(self):
+        # The core of the application
+        self.vidxidml = VidOverPCM.VidOverPCM()
+        self.mygtsdec = VideoGTSDecom.VideoGTSDecom()
+        self.acquiring = False  # current acqusition state
+        self.xidmlFName = None
+        self.gtsFName = None
 
     ###################################
     # Methods to configure the window
@@ -196,20 +210,20 @@ class MainFrame(Frame):
 
     def _addButtons(self):
         self.configButton = Button(self.parent,text="Configure GTS/DEC",command=self.setupGTSDec,state=DISABLED)
-        self.runButton = Button(self.parent,text="Run Acqusition",command=self.toggleAcqusition,state=DISABLED)
+        self.runButton = Button(self.parent,text="Run Acqusition",command=self.toggleAcqusition,state=DISABLED,background="red")
 
 
         # place them
-        self.configButton.grid(row=1,column=3)
-        self.runButton.grid(row=2,column=3)
+        self.configButton.grid(row=1,column=3,sticky=E+W,pady=5,ipady=5,ipadx=5)
+        self.runButton.grid(row=2,column=3,sticky=E+W,pady=5,ipady=5,ipadx=5)
 
     def _addConsole(self):
         self.consoleScrollbar = Scrollbar(self.parent)
         self.console = Text(self.parent,height=10,width=50)
         self.console.config(yscrollcommand=self.consoleScrollbar.set)
         self.consoleScrollbar.config(command=self.console.yview)
-        self.console.grid(row=100,column=1,columnspan=3)
-        self.consoleScrollbar.grid(row=100,column=5,sticky=E+N+S)
+        self.console.grid(row=100,column=1,columnspan=5,sticky=E+W)
+        self.consoleScrollbar.grid(row=100,column=6,sticky=N+S)
 
 
     def _setupLogging(self):
@@ -225,6 +239,8 @@ class MainFrame(Frame):
         exit()
 
     def loadXidml(self):
+        self._initStructures()
+
         fname = tkFileDialog.askopenfilename(filetypes=(("DASStudio Files", "*.xidml"),
                                            ("KSM Files", "*.xml"),
                                            ("All files", "*.*") ))
@@ -240,8 +256,8 @@ class MainFrame(Frame):
             myrow = 3
             for mpegts in self.mygtsdec.mpegTS.itervalues():
                 vframe = VidFrame(self.parent,mpegts)
-                vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
-                vframe.grid(row=myrow,column=1,columnspan=3,sticky=E+W,pady=10,padx=10)
+                vframe.grid(row=myrow,column=1,columnspan=5,sticky=E+W,pady=10,padx=10)
+                vframe.grid(row=myrow,column=1,columnspan=5,sticky=E+W,pady=10,padx=10)
                 self.vidFrames.append(vframe)
                 myrow += 20
 
@@ -262,6 +278,7 @@ class MainFrame(Frame):
 
     def setupGTSDec(self):
         try:
+            logging.info("Configuring the GTS/DEC card. Please wait...")
             self.mygtsdec.setDLLPath(self.dllpath)                       # Pass the dll path
             self.mygtsdec.configureGtsDec(self.gtsFName,self.gtsDecName)  # Configure the GTS DEC card with the frame configuration
             self.mygtsdec.openGtsDec(self.gtsdecSerialNum)              # Open the card by serial number
@@ -278,11 +295,16 @@ class MainFrame(Frame):
             self.acquiring = True
             self.configButton['state'] = 'disabled'
             self.runButton['text'] = "Stop Acqusition"
+            self.runButton['background'] = "green"
         else:
             self.mygtsdec.stop()
             self.acquiring = False
             self.configButton['state'] = 'normal'
             self.runButton['text'] = "Run Acqusition"
+            self.runButton['background'] = "red"
+            for vidframe in self.vidFrames:
+                vidframe._setAlignment(False)
+                vidframe.mpegts.resetData()
 
 def main():
 

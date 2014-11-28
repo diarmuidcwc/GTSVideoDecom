@@ -25,6 +25,7 @@
 import struct
 import socket
 import logging
+import time
 
 
 
@@ -40,15 +41,15 @@ class MpegTS(object):
 
     def __init__(self,ipaddress="192.168.28.110",udpport=777):
         #super(MpegTS,self).__init__()
-        self.payload = ""
-        self.alignedPayload = ""
+        self.resetData()
+        self.pids = dict()
         self.dstip = ipaddress
         self.dstudp = udpport
         self.setupUDP()
 
-        self.aligned = False
+
         self.diagnostics = True
-        self.pids = dict()
+        self.blocksTransmitted = 0
         self.blocksReceived = 0
         self.name = None
         self._dumpfname = None
@@ -91,10 +92,11 @@ class MpegTS(object):
 
     def _checkAlignment(self):
         '''Verify that we are still in alignment'''
-        (syncByte,) = struct.unpack_from('B',self.alignedPayload)
-        if syncByte != 0x47:
+        (syncByte,tpid) = struct.unpack_from('BB',self.alignedPayload)
+        if syncByte != 0x47 :
             self.setAlignment(False)
             logging.error("Out of sync in MPEG TS {}".format(self.name))
+
 
     def setupUDP(self):
         '''Open a UDP socket'''
@@ -114,6 +116,7 @@ class MpegTS(object):
             # transmit the packets
             self.sendSocket.sendto(self.alignedPayload[:MpegTS.UDP_PAYLOAD_LEN],(self.dstip,self.dstudp))
             self.alignedPayload = self.alignedPayload[MpegTS.UDP_PAYLOAD_LEN:]
+            self.blocksTransmitted += MpegTS.MPEG_TS_BLOCKS_PER_PACKET
 
     def trackPayload(self):
         '''Keep a track of the PIDs being generated for diagnostic purposes'''
@@ -128,7 +131,7 @@ class MpegTS(object):
                     pid = (tpid % 8192) # pid is 13 bits
                     ccounter = (tcounter % 16)
                     self.blocksReceived += 1
-                    #print "DEBUG syc ={:0X} pid={:0X} ccounter={} offset={}".format(syncByte,tpid,ccounter,buffer_offset)
+
                     if pid in self.pids:
                         self.pids[pid]['count'] += 1
                         if (self.pids[pid]['continuity'] + 1 ) % 16 != ccounter:
@@ -144,6 +147,21 @@ class MpegTS(object):
                         self.pids[pid]['count'] = 1
                         self.pids[pid]['continuity'] = ccounter
                         self.pids[pid]['cdrops'] = 0
+                        self.pids[pid]['bps'] = 0
+                        self.pids[pid]['prevCount'] = 0
+
+                    # Figure out the bitrate at regular intervals
+                    # if (self.blocksTransmitted/MpegTS.MPEG_TS_BLOCKS_PER_PACKET) % 1000 == 0:
+                    #     current_time = time.time()
+                    #     logging.info("here {} {} {} ".format(self.blocksTransmitted,self.pids[pid]['count'],self.pids[pid]['prevCount']))
+                    #     if 'time' in self.pids[pid]:
+                    #         logging.info("in here")
+                    #         self.pids[pid]['bps'] = int(float((self.pids[pid]['count'] - self.pids[pid]['prevCount']  )* MpegTS.MPEG_TS_BLOCK_LEN*8 ) / (current_time-self.pids[pid]['time']))
+                    #         self.pids[pid]['prevCount'] = self.pids[pid]['count']
+                    #         self.pids[pid]['time'] = current_time
+                    #     else:
+                    #         self.pids[pid]['prevCount'] = self.pids[pid]['count']
+                    #         self.pids[pid]['time'] = current_time
 
                     for callback in self._diagnosticObservers:
                             callback(self.pids)
@@ -162,6 +180,12 @@ class MpegTS(object):
             logging.info("{} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp))
         else:
             logging.warn("{} is out of alignment. Stopping UDP transmission".format(self.name,self.dstip,self.dstudp))
+
+    def resetData(self):
+        self.payload = ""
+        self.alignedPayload = ""
+        self.aligned = False
+
 
     def _dumpToFile(self,buf):
         dumpf = open(self._dumpfname,'ab')
