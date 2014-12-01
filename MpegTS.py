@@ -38,6 +38,7 @@ class MpegTS(object):
     MPEG_TS_BLOCK_LEN = 188
     UDP_PAYLOAD_LEN = MPEG_TS_BLOCKS_PER_PACKET * MPEG_TS_BLOCK_LEN
     PID_TEXT = {0x1fff : "Null", 0x0 : "Program Association Table", 0x100 : "VID106_Video" , 0x101 : "VID106_Audio", 0x1000 : "Program Map Table", 0x3E8 : "VID103_Video", 0x20 : "Unkn"}
+    DIAGNOSTIC_DELAY = 4.0 # seconds
 
     def __init__(self,ipaddress="192.168.28.110",udpport=777):
         #super(MpegTS,self).__init__()
@@ -122,7 +123,7 @@ class MpegTS(object):
         '''Keep a track of the PIDs being generated for diagnostic purposes'''
         # This should only be called before you transmit a UDP packet so I will
         # only run if there are MPEG_TS_BLOCKS_PER_PACKET blocks availabel
-        if len(self.alignedPayload) > MpegTS.UDP_PAYLOAD_LEN and self.aligned == True:
+        if len(self.alignedPayload) > MpegTS.UDP_PAYLOAD_LEN and self.aligned == True and (time.clock() - self.diagnosticsDelay) > MpegTS.DIAGNOSTIC_DELAY:
             for block in range(MpegTS.MPEG_TS_BLOCKS_PER_PACKET):
                 buffer_offset = MpegTS.MPEG_TS_BLOCK_LEN * block
                 (syncByte,tpid,tcounter) = struct.unpack_from('>BHB',self.alignedPayload[buffer_offset:buffer_offset+6])
@@ -185,6 +186,7 @@ class MpegTS(object):
         self.payload = ""
         self.alignedPayload = ""
         self.aligned = False
+        self.diagnosticsDelay = time.clock()
 
 
     def _dumpToFile(self,buf):
