@@ -25,6 +25,7 @@ import MpegTS
 import VidOverPCM
 import datetime
 import logging
+import time
 
 
 class VideoGTSDecom(GtsDec.GtsDec):
@@ -37,6 +38,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.vidOverPCM = VidOverPCM.VidOverPCM()
         self.mpegTS = dict()
         self.logtofile = True
+        self._debugcount = 0
 
     def addVidOverPCM(self,vidoverPCM):
         '''
@@ -63,6 +65,8 @@ class VideoGTSDecom(GtsDec.GtsDec):
         '''The callback method that is run on every frame'''
         # This method will take a full PCM frame and return a dict of buffers
         # one for each VID in the PCM frame
+        self._debugcount += 1
+        #print "Received frame count {} wordcount = {} time = {}".format(self._debugcount,wordCount,time.clock())
         vid_bufs = self.vidOverPCM.frameToBuffers(pwords[:wordCount])
         for vid,buf in vid_bufs.iteritems():
             #print "Decom frame vid = {}".format(vid)

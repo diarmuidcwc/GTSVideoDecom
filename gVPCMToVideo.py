@@ -31,6 +31,8 @@ from Tkinter import *
 import tkFileDialog
 import logging
 import pprint
+import datetime
+
 
 
 class LoggingToGui(logging.Handler):
@@ -69,6 +71,8 @@ class VidFrame(LabelFrame):
         self.ipLabel = StringVar()
         self.ipLabel.set(self.mpegts.dstip)
         self.pids = dict() # dict of pids with StringVars
+        self.dumpToFileStatus = IntVar()
+
 
         self.pack()
         self._addLabels()
@@ -113,9 +117,18 @@ class VidFrame(LabelFrame):
             self.alignmentLabel['background'] = "red"
 
     def _addDiagnostics(self):
+        self.logToFile = Checkbutton(self,text="Dump to file",command=self.dumpToFile,variable=self.dumpToFileStatus).grid(row=4,column=1,columnspan=2,sticky=E+W,pady=2,padx=2)
         Label(self,text="PID").grid(row=1,column=3)
         Label(self,text="Blocks Received").grid(row=1,column=4)
         Label(self,text="Dropped Blocks").grid(row=1,column=5)
+
+    def dumpToFile(self):
+        if self.dumpToFileStatus.get() == 1:
+            sanitisedFname = self.mpegts.name.replace("/","_")
+            self.mpegts._dumpfname = "{}_{}.ts".format(sanitisedFname,datetime.datetime.now().strftime("%Y%m%d%H%S"))
+            logging.info("Writing video from {} to {}".format(self.mpegts.name,self.mpegts._dumpfname))
+        else:
+            self.mpegts._dumpfname = None
 
     def _displayDiagnostics(self,pids):
         '''
@@ -133,13 +146,13 @@ class VidFrame(LabelFrame):
                 except:
                     textPID = pid
                 self.pids[pid] = dict()
-                Label(self,text=textPID).grid(row=add_row,column=3,sticky=E+W)
+                Label(self,text=textPID).grid(row=add_row,column=3,sticky=E+W,pady=2,padx=2)
                 self.pids[pid]['countEntryVar'] = StringVar()
                 self.pids[pid]['countEntry'] = Entry(self, textvariable=self.pids[pid]['countEntryVar'])
-                self.pids[pid]['countEntry'].grid(row=add_row,column=4)
+                self.pids[pid]['countEntry'].grid(row=add_row,column=4,sticky=E+W,pady=2,padx=2)
                 self.pids[pid]['dropEntryVar'] = StringVar()
                 self.pids[pid]['dropEntry'] = Entry(self, textvariable=self.pids[pid]['dropEntryVar'])
-                self.pids[pid]['dropEntry'].grid(row=add_row,column=5)
+                self.pids[pid]['dropEntry'].grid(row=add_row,column=5,sticky=E+W,pady=2,padx=2)
 
 
 class MainFrame(Frame):

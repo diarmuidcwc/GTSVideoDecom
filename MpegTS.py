@@ -178,9 +178,9 @@ class MpegTS(object):
 
     def logInfo(self):
         if self.aligned:
-            logging.info("{} is aligned. Transmitting to {} port {}".format(self.name,self.dstip,self.dstudp))
+            logging.info("{} is aligned. Transmitting to {} port {}. time = {}".format(self.name,self.dstip,self.dstudp,time.strftime("%H:%ML%S",time.gmtime())))
         else:
-            logging.warn("{} is out of alignment. Stopping UDP transmission".format(self.name,self.dstip,self.dstudp))
+            logging.warn("{} is out of alignment. Stopping UDP transmission. time = {}".format(self.name,self.dstip,self.dstudp,time.strftime("%H:%ML%S",time.gmtime())))
 
     def resetData(self):
         self.payload = ""
