@@ -130,6 +130,9 @@ class VidFrame(LabelFrame):
         else:
             self.mpegts._dumpfname = None
 
+    def resetDiagnostics(self):
+        pass
+
     def _displayDiagnostics(self,pids):
         '''
         Update the diagnostics of the PID display
@@ -323,7 +326,7 @@ class MainFrame(Frame):
 def main():
 
     root = Tk()
-    root.geometry("600x700+100+100")
+    root.geometry("600x800+100+100")
     app = MainFrame(root)
     root.mainloop()
 
