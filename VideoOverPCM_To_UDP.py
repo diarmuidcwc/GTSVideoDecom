@@ -31,8 +31,8 @@ import VideoGTSDecom
 GTSDEC_SERIAL_NUM = "XS9766"
 DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
 #SRC_XIDML = "Configuration/vid_106_103.XML"
-SRC_XIDML = "Configuration/vid_106_103_minorframes.XML"
-GTSDEC_XIDML = "Configuration/gtsdec5_vid_13_16_minor.xml"
+SRC_XIDML = "Configuration/vid_single106_145.XML"
+GTSDEC_XIDML = "Configuration/gtsdec5.xml"
 GTSDEC_NAME = "MyCard"
 
 

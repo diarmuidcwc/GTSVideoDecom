@@ -56,7 +56,7 @@ class LoggingToGui(logging.Handler):
 
 
 class VidFrame(LabelFrame):
-    def __init__(self, parent, mpegts):
+    def __init__(self, parent, mpegts, disgnostics=True):
         '''
         :type parent:
         :type mpegts: MpegTS.MpegTS

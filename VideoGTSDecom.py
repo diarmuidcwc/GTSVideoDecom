@@ -28,6 +28,7 @@ import logging
 import time
 
 
+
 class VideoGTSDecom(GtsDec.GtsDec):
     '''Create a new class inheriting the GtsDec class. Override the callback method using this approach'''
 
@@ -40,7 +41,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.logtofile = True
         self._debugcount = 0
 
-    def addVidOverPCM(self,vidoverPCM):
+    def addVidOverPCM(self,vidoverPCM,diagnostics=True):
         '''
         :type vidoverPCM: VidOverPCM.VidOverPCM
         '''
@@ -49,6 +50,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         for vid in self.vidOverPCM.vidsPerXidml:
             self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port)
             self.mpegTS[vid].name = vid
+            self.mpegTS[vid].diagnostics = diagnostics
             if self.logtofile:
                 sanitisedFname = vid.replace("/","_")
                 self.mpegTS[vid]._dumpfname = "{}_{}.ts".format(sanitisedFname,datetime.datetime.now().strftime("%Y%m%d%H%S"))
@@ -70,5 +72,8 @@ class VideoGTSDecom(GtsDec.GtsDec):
         vid_bufs = self.vidOverPCM.frameToBuffers(pwords[:wordCount])
         for vid,buf in vid_bufs.iteritems():
             #print "Decom frame vid = {}".format(vid)
+            #start= time.clock()
             self.mpegTS[vid].addPayload(buf)
+            #end= time.clock()
+            #logging.info("Start = {} Time To Run = {}".format(start,end-start))
         return 0

@@ -66,6 +66,7 @@ class VidOverPCM():
         self._findAllModules()
         self._findAllParameters()
         self._findAllPCMPackages()
+        self._pruneUnusedVids()
         self._numberOfVids()
 
 
@@ -204,6 +205,19 @@ class VidOverPCM():
                             self.vids[self._allVidParams[pref]][pref].append(addOffsetIllegalFrame+minorframeoffset+firstWordOffset+(offsetWordInterval*offset))
                             if offset % offsetWordInterval == (offsetWordInterval-1):
                                 addOffsetIllegalFrame += 1
+
+
+    def _pruneUnusedVids(self):
+        vidIsUnused = dict()
+        for vid,params in self.vids.iteritems():
+            vidIsUnused[vid] = True
+            for location in params:
+                if len(self.vids[vid][location]) > 0:
+                    vidIsUnused[vid] = False
+
+        for vid in vidIsUnused:
+            if vidIsUnused[vid] == True:
+                del self.vids[vid]
 
 
 
