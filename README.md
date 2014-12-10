@@ -11,6 +11,8 @@ in the one frame are supported
 
 Off the shelf video players such as VLC or mplayer can play back this video stream on standard computers
 
+![Image of GUI](Documentation/VideoDecom.jpg]
+
 ##Requirements##
 * Windows XP or Windows 7
 * [GTS/DEC decom card](http://www.cwc-ae.com/product/gtsdec005) with the SDK installed
@@ -51,6 +53,8 @@ At this point the "Run Acquistion" button should be available. Click on this but
 
 Now the application will attempt to acquire data, extract all the video words it finds, align the data so that the
 sync word is aligned to the first word in the UDP payload and transmit the aligned data.
+
+![Image of GUI](Documentation/gui_snapshot.jpg]
 
 ###The diagnostics output###
 The GUI reports some diagnostic information about the video stream. It reports the various Program IDentifiers in the
