@@ -88,12 +88,12 @@ mplayer udp://@235.0.0.1:7777
 ```
 
 To minimise the latency of the video playback the ideal application is mplayer with the following command line options
-` `
+```
 -benchmark
 -nosound
- ` `
+```
 
- The latency on vlc can be reduced but it does not seem to perform as well as mplayer due to internal caching of data
+The latency on vlc can be reduced but it does not seem to perform as well as mplayer due to internal caching of data.
 
 
 

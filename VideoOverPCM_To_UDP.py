@@ -68,9 +68,9 @@ def main():
     mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
     mygtsdec.dstip = args.dstip
     mygtsdec.dstport = args.dstudp
-    mygtsdec.addVidOverPCM(vidxidml)                    # The VidOverPCM object
-    mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
     mygtsdec.logtofile = False
+    mygtsdec.addVidOverPCM(vidxidml,diagnostics=False)                    # The VidOverPCM object
+    mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
     mygtsdec.configureGtsDec(args.gtsdec,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration
     mygtsdec.openGtsDec(GTSDEC_SERIAL_NUM)              # Open the card by serial number
     logging.info("GTS/DEC card successfully opened")
