@@ -26,6 +26,7 @@ import os
 import time
 import VidOverPCM
 import VideoGTSDecom
+import argparse
 
 # Constants for this script
 GTSDEC_SERIAL_NUM = "XS9766"
@@ -38,13 +39,22 @@ GTSDEC_NAME = "MyCard"
 
 def main():
 
+
+    parser = argparse.ArgumentParser(description='Bridge GTS/DEC to Video UDP stream')
+    parser.add_argument('--gtsdec', type=str, required=True, help='the GTS/DEC configuration file')
+    parser.add_argument('--xidml', type=str, required=True, help='the DASStudio or KSM xidml')
+    args = parser.parse_args()
+
+
     # Setup a logger
     import logging
     logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
+
+
     # Get the source xidml file with the VID PCM structure
     vidxidml = VidOverPCM.VidOverPCM()
-    vidxidml.parseXidml(SRC_XIDML)
+    vidxidml.parseXidml(args.xidml)
     for vidname in vidxidml.vids:
         logging.info("Found vid = {}".format(vidname))
     # We now have an object that knows how to convert a PCM frame into one or multiple
@@ -55,7 +65,8 @@ def main():
     mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
     mygtsdec.addVidOverPCM(vidxidml)                    # The VidOverPCM object
     mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
-    mygtsdec.configureGtsDec(GTSDEC_XIDML,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration
+    mygtsdec.logtofile = False
+    mygtsdec.configureGtsDec(args.gtsdec,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration
     mygtsdec.openGtsDec(GTSDEC_SERIAL_NUM)              # Open the card by serial number
     logging.info("GTS/DEC card successfully opened")
     mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
@@ -66,9 +77,13 @@ def main():
     logging.info("Acquisition running")
 
     second_count = 0
+    minute_count = 0
     while True:                 # Run for a number of seconds
         print ".",
         time.sleep(1)                       # The callback will be firing all during this point
+        if second_count % 60 == 0:
+            print "{} minutes".format(minute_count)
+            minute_count += 1
         second_count += 1
     print ""
 

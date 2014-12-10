@@ -39,6 +39,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.vidOverPCM = VidOverPCM.VidOverPCM()
         self.mpegTS = dict()
         self.logtofile = True
+        self.dstip = "235.0.0.1"
         self._debugcount = 0
 
     def addVidOverPCM(self,vidoverPCM,diagnostics=True):
@@ -48,7 +49,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.vidOverPCM = vidoverPCM
         udp_port = VideoGTSDecom.BASE_UDP_PORT
         for vid in self.vidOverPCM.vidsPerXidml:
-            self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port)
+            self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port,ipaddress=self.dstip)
             self.mpegTS[vid].name = vid
             self.mpegTS[vid].diagnostics = diagnostics
             if self.logtofile:

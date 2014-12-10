@@ -47,6 +47,7 @@ class MpegTS(object):
         self.dstip = ipaddress
         self.dstudp = udpport
         self.setupUDP()
+        self.interface = "0.0.0.0"
 
 
         self.diagnostics = True
@@ -102,6 +103,10 @@ class MpegTS(object):
     def setupUDP(self):
         '''Open a UDP socket'''
         self.sendSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        iptuples = self.dstip.split('.')
+        if iptuples[0] > 223 and iptuples[0] < 240:
+            # We have a multicast address so add it
+            self.setsockopt(socket.IPPROTO_IP,socket.IP_ADD_MEMBERSHIP,socket.inet_aton(self.dstip) + socket.inet_aton(self.interface))
 
 
 
