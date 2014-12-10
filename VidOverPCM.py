@@ -21,7 +21,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from lxml import etree
+import xml.etree.ElementTree as etree
 import re
 import array
 import struct
@@ -59,6 +59,7 @@ class VidOverPCM():
         try:
             self.tree = etree.parse(xidml)
             self.root = self.tree.getroot()
+            self.parent_map ={c:p for p in self.tree.iter() for c in p} # create a dict so I can figure out the parents and gps
         except:
             raise IOError("Failed to parse {}".format(xidml))
         self.xidml = xidml
@@ -112,8 +113,12 @@ class VidOverPCM():
         allModules = self.root.findall(".//PartReference")
         for module in allModules:
             if module.text in self.vidInstruments:
-                vidname = module.getparent().getparent().attrib["Name"]
-                self.vids[vidname] = dict() # dict will contain the parameters + locations
+                try:
+                    mygp = self.parent_map[self.parent_map[module]]
+                    vidname = mygp.attrib["Name"]
+                    self.vids[vidname] = dict() # dict will contain the parameters + locations
+                except:
+                    raise Exception("Failed to get parent module of {}".format(module.text))
 
 
     def _findAllParameters(self):
@@ -131,7 +136,12 @@ class VidOverPCM():
         else:
             allParameterReferences = self.root.findall(".//Parameters/ParameterReference")
             for parameterreference in allParameterReferences:
-                source_instrument = parameterreference.getparent().getparent().attrib["Name"]
+                try:
+                    mygp = self.parent_map[self.parent_map[parameterreference]]
+                    source_instrument = mygp.attrib["Name"]
+                except:
+                    raise Exception("Failed to get parent of {}".format(parameterreference.text))
+
                 if source_instrument != None:
                     if source_instrument in self.vids:
                         if re.search(self._parameterReferenceVendorOfInterestRE, parameterreference.attrib["VendorName"]):

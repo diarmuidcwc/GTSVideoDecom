@@ -23,15 +23,14 @@
 
 
 import os
-import time
 import VidOverPCM
 import VideoGTSDecom
 import MpegTS
 from Tkinter import *
 import tkFileDialog
 import logging
-import pprint
 import datetime
+
 
 
 
@@ -252,6 +251,7 @@ class MainFrame(Frame):
         dstportentry.grid(row=4,column=2)
         gtscardentry.grid(row=5,column=2)
         gtsserialentry.grid(row=6,column=2)
+
 
 
     def _addButtons(self):
