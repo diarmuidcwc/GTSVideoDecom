@@ -24,8 +24,7 @@ git clone https://github.com/diarmuidcwc/GTSVideoDecom.git
 
 ##Inputs to Application##
 * xidml source file from KSM or DASStudio. This file defines the instruments and the PCM frames
-* xml configuration for the GTS/DEC. This file configures the GTS/DEC instrument
-Sample files are in the Configuration directory
+* xml configuration for the GTS/DEC. This file configures the GTS/DEC instrument. Sample files are in the Configuration directory
 
 ##GUI Application##
 To run the GUI version of the tool run
@@ -78,9 +77,20 @@ The application will constantly try to keep the video words aligned
 ##Playback##
 This application generates a single UDP stream per video instruments. The application will
 report the destination IP Address and UDP Port for each stream. To playback these streams, run
-VLC or mplayer as follows.
+[VLC](http://www.videolan.org/vlc/download-windows.html) or [mplayer] (http://www.mplayerhq.hu/design7/dload.html)as follows.
 ```
 vlc udp://@235.0.0.1:7777
-mplayer udp://@235.0.0.1:7777 -benchmark
+mplayer udp://@235.0.0.1:7777
 ```
+
+To minimise the latency of the video playback the ideal application is mplayer with the following command line options
+` `
+-benchmark
+-nosound
+ ` `
+
+ The latency on vlc can be reduced but it does not seem to perform as well as mplayer due to internal caching of data
+
+
+
 
