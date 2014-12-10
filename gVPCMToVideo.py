@@ -167,8 +167,14 @@ class MainFrame(Frame):
 
         # Settings
         self.dllpath    = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
-        self.gtsDecName = "MyCard"
-        self.gtsdecSerialNum = "XS9766"
+        self.gtsDecName = StringVar()
+        self.gtsDecName.set("MyCard")
+        self.gtsdecSerialNum = StringVar()
+        self.gtsdecSerialNum.set("XS9766")
+        self.dstip = StringVar()
+        self.dstip.set("235.0.0.1")
+        self.dstport = IntVar()
+        self.dstport.set(7777)
 
         # The windowing aspects
         self.parent = parent
@@ -216,14 +222,37 @@ class MainFrame(Frame):
         menubar.add_cascade(label="File", menu=fileMenu)
 
     def _addLabels(self):
-        xidmllabel = Label(self.parent, text="Xidml")
-        xidmltext =  Entry(self.parent, textvariable=self.xidmlLabel)
-        gtslabel   = Label(self.parent, text="GTS/DEC")
-        gtstext   = Entry(self.parent, textvariable=self.gtsLabel)
-        xidmllabel.grid(row=1,column=1)
-        gtslabel.grid(row=2,column=1)
+        xidmllabel  = Label(self.parent, text="Xidml")
+        xidmltext   = Entry(self.parent, textvariable=self.xidmlLabel,state="readonly")
+        gtslabel    = Label(self.parent, text="GTS/DEC")
+        gtstext     = Entry(self.parent, textvariable=self.gtsLabel,state="readonly")
+
+        settingsgroup = LabelFrame(self.parent,text="Configuration Settings",padx=5,pady=5)
+        settingsgroup.grid(row=3,column=1,columnspan=3,sticky=E+W,ipadx=10,ipady=10,padx=2,pady=2)
+
+        dstiplabel  = Label(settingsgroup, text="Destination IP")
+        dstipentry  = Entry(settingsgroup, textvariable=self.dstip)
+        dstportlabel  = Label(settingsgroup, text="Destination UDP Port")
+        dstportentry  = Entry(settingsgroup, textvariable=self.dstport)
+        gtscardlabel = Label(settingsgroup, text="GTS/Card Name")
+        gtscardentry = Entry(settingsgroup, textvariable=self.gtsDecName)
+        gtsseriallabel = Label(settingsgroup, text="GTS/Card Serial Number")
+        gtsserialentry = Entry(settingsgroup, textvariable=self.gtsdecSerialNum)
+
+        xidmllabel.grid(row=1,column=1,sticky=E)
+        gtslabel.grid(row=2,column=1,sticky=E)
+        dstiplabel.grid(row=3,column=1,sticky=E)
+        dstportlabel.grid(row=4,column=1,sticky=E)
+        gtscardlabel.grid(row=5,column=1,sticky=E)
+        gtsseriallabel.grid(row=6,column=1,sticky=E)
+
         xidmltext.grid(row=1,column=2)
         gtstext.grid(row=2,column=2)
+        dstipentry.grid(row=3,column=2)
+        dstportentry.grid(row=4,column=2)
+        gtscardentry.grid(row=5,column=2)
+        gtsserialentry.grid(row=6,column=2)
+
 
     def _addButtons(self):
         self.configButton = Button(self.parent,text="Configure GTS/DEC",command=self.setupGTSDec,state=DISABLED)
@@ -267,10 +296,12 @@ class MainFrame(Frame):
             self.xidmlLabel.set(os.path.basename(fname))
 
             self.vidxidml.parseXidml(fname)
+            self.mygtsdec.dstip = self.dstip.get()
+            self.mygtsdec.dstport = self.dstport.get()
             self.mygtsdec.addVidOverPCM(self.vidxidml)
             for vidname in self.vidxidml.vids:
                 logging.info("Found vid = {}".format(vidname))
-            myrow = 3
+            myrow = 10
             for mpegts in self.mygtsdec.mpegTS.itervalues():
                 vframe = VidFrame(self.parent,mpegts)
                 vframe.grid(row=myrow,column=1,columnspan=5,sticky=E+W,pady=10,padx=10)
@@ -297,14 +328,14 @@ class MainFrame(Frame):
         try:
             logging.info("Configuring the GTS/DEC card. Please wait...")
             self.mygtsdec.setDLLPath(self.dllpath)                       # Pass the dll path
-            self.mygtsdec.configureGtsDec(self.gtsFName,self.gtsDecName)  # Configure the GTS DEC card with the frame configuration
-            self.mygtsdec.openGtsDec(self.gtsdecSerialNum)              # Open the card by serial number
+            self.mygtsdec.configureGtsDec(self.gtsFName,self.gtsDecName.get())  # Configure the GTS DEC card with the frame configuration
+            self.mygtsdec.openGtsDec(self.gtsdecSerialNum.get())              # Open the card by serial number
             #logging.info("GTS/DEC card successfully opened")
             self.mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
                                                                     # my CustomGTSDecom class
             self.runButton['state'] = 'normal'
         except:
-            logging.error("Failed to program GTS/DEC {} with configuration {}".format(self.gtsDecName,self.gtsFName))
+            logging.error("Failed to program GTS/DEC {} with configuration {}".format(self.gtsDecName.get(),self.gtsFName))
 
     def toggleAcqusition(self):
         if self.acquiring == False:

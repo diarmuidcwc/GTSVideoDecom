@@ -40,6 +40,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.mpegTS = dict()
         self.logtofile = True
         self.dstip = "235.0.0.1"
+        self.dstport = 7777
         self._debugcount = 0
 
     def addVidOverPCM(self,vidoverPCM,diagnostics=True):
@@ -47,7 +48,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         :type vidoverPCM: VidOverPCM.VidOverPCM
         '''
         self.vidOverPCM = vidoverPCM
-        udp_port = VideoGTSDecom.BASE_UDP_PORT
+        udp_port = self.dstport
         for vid in self.vidOverPCM.vidsPerXidml:
             self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port,ipaddress=self.dstip)
             self.mpegTS[vid].name = vid

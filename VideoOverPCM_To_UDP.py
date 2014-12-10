@@ -43,6 +43,8 @@ def main():
     parser = argparse.ArgumentParser(description='Bridge GTS/DEC to Video UDP stream')
     parser.add_argument('--gtsdec', type=str, required=True, help='the GTS/DEC configuration file')
     parser.add_argument('--xidml', type=str, required=True, help='the DASStudio or KSM xidml')
+    parser.add_argument('--dstip', type=str, required=False,default="235.0.0.1", help='the destination IP address')
+
     args = parser.parse_args()
 
 
@@ -63,6 +65,8 @@ def main():
 
     # I have inherited the basic GTSDec Class so that I can replace the callback function
     mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
+    mygtsdec.dstip = "235.0.0.1"
+    mygtsdec.dstport = 7777
     mygtsdec.addVidOverPCM(vidxidml)                    # The VidOverPCM object
     mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
     mygtsdec.logtofile = False
