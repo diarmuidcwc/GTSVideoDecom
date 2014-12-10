@@ -141,6 +141,7 @@ class MpegTS(object):
                     if pid in self.pids:
                         self.pids[pid]['count'] += 1
                         if (self.pids[pid]['continuity'] + 1 ) % 16 != ccounter:
+                            #print "Cont={}pid={}count={}".format(self.pids[pid]['continuity'],pid,ccounter)
                             self.pids[pid]['cdrops'] += abs(self.pids[pid]['continuity'] + 1 - ccounter)
                             self.pids[pid]['continuity'] = ccounter
                         else:

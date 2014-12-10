@@ -86,9 +86,9 @@ class VidFrame(LabelFrame):
         Add all the labels to the Video Frame
         '''
         udpLabel  = Label(self, text="UDP Port")
-        udpText =  Entry(self, textvariable=self.udpLabel)
+        udpText =  Entry(self, textvariable=self.udpLabel,state="readonly")
         ipLabel  = Label(self, text="IP Address")
-        ipText =  Entry(self, textvariable=self.ipLabel)
+        ipText =  Entry(self, textvariable=self.ipLabel,state="readonly")
         udpLabel.grid(row=1,column=1)
         udpText.grid(row=1,column=2,sticky=E+W)
         ipLabel.grid(row=2,column=1)
@@ -150,10 +150,10 @@ class VidFrame(LabelFrame):
                 self.pids[pid] = dict()
                 Label(self,text=textPID).grid(row=add_row,column=3,sticky=E+W,pady=2,padx=2)
                 self.pids[pid]['countEntryVar'] = StringVar()
-                self.pids[pid]['countEntry'] = Entry(self, textvariable=self.pids[pid]['countEntryVar'])
+                self.pids[pid]['countEntry'] = Entry(self, textvariable=self.pids[pid]['countEntryVar'],state="readonly")
                 self.pids[pid]['countEntry'].grid(row=add_row,column=4,sticky=E+W,pady=2,padx=2)
                 self.pids[pid]['dropEntryVar'] = StringVar()
-                self.pids[pid]['dropEntry'] = Entry(self, textvariable=self.pids[pid]['dropEntryVar'])
+                self.pids[pid]['dropEntry'] = Entry(self, textvariable=self.pids[pid]['dropEntryVar'],state="readonly")
                 self.pids[pid]['dropEntry'].grid(row=add_row,column=5,sticky=E+W,pady=2,padx=2)
 
 
