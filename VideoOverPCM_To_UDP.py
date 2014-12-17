@@ -30,14 +30,29 @@ import argparse
 from threading import Thread
 from threading import Event
 import logging
+import ConfigParser
 
-# Constants for this script
-GTSDEC_SERIAL_NUM = "XS9766"
-DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
-#SRC_XIDML = "Configuration/vid_106_103.XML"
-SRC_XIDML = "Configuration/vid_single106_145.XML"
-GTSDEC_XIDML = "Configuration/gtsdec5.xml"
-GTSDEC_NAME = "MyCard"
+CONFIG_FILE = "gtsdecom.ini"
+config = ConfigParser.SafeConfigParser()
+
+GTSDEC_SERIAL_NUM = "XS9765"
+DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.2","Software","Bin","gtsdecw.dll")
+GTSDEC_NAME = "MyCard2"
+DST_IP = "235.0.0.1"
+DST_PORT = 7777
+
+if os.path.exists(CONFIG_FILE):
+    config.read('gtsdecom.ini')
+    if config.get('Hardware', 'SerialNumber'):
+            GTSDEC_SERIAL_NUM = config.get('Hardware', 'SerialNumber')
+    if config.get('Hardware', 'CardName'):
+            GTSDEC_NAME = config.get('Hardware', 'CardName')
+    if config.get('Software', 'DLLPath'):
+        DLL_PATH = config.get('Software', 'DLLPath')
+    if config.getint("Network","DestinationPort"):
+        DST_PORT = config.getint("Network","DestinationPort")
+    if config.get("Network","DestinationAddress"):
+        DST_IP = config.get("Network","DestinationAddress")
 
 
 class RunThread(Thread):
@@ -72,8 +87,6 @@ def main():
     parser = argparse.ArgumentParser(description='Bridge GTS/DEC to Video UDP stream')
     parser.add_argument('--gtsdec', type=str, required=True, help='the GTS/DEC configuration file')
     parser.add_argument('--xidml', type=str, required=True, help='the DASStudio or KSM xidml')
-    parser.add_argument('--dstip', type=str, required=False,default="235.0.0.1", help='the destination IP address')
-    parser.add_argument('--dstudp', type=int, required=False,default=7777, help='the destination UDP port')
     parser.add_argument('--verbose', type=int, required=False,default=2, help='Verbose level (1=error,2=warn,3=info,4=debug)')
     parser.add_argument('--quiet',  action='store_true', help='Quiet Mode')
 
@@ -109,8 +122,8 @@ def main():
 
     # I have inherited the basic GTSDec Class so that I can replace the callback function
     mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
-    mygtsdec.dstip = args.dstip
-    mygtsdec.dstport = args.dstudp
+    mygtsdec.dstip = DST_IP
+    mygtsdec.dstport = DST_PORT
     mygtsdec.logtofile = False
     mygtsdec.addVidOverPCM(vidxidml,diagnostics=False)                    # The VidOverPCM object
     mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path

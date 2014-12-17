@@ -41,10 +41,11 @@ class MpegTS(object):
     PID_TEXT = {0x1fff : "Null", 0x0 : "Program Association Table", 0x100 : "VID106_Video" , 0x101 : "VID106_Audio", 0x1000 : "Program Map Table", 0x3E8 : "VID103_Video", 0x20 : "Unkn"}
     DIAGNOSTIC_DELAY = 4.0 # seconds
 
-    def __init__(self,ipaddress="192.168.28.110",udpport=777):
+    def __init__(self,ipaddress="192.168.28.110",udpport=777,name="Vid"):
         #super(MpegTS,self).__init__()
         self.resetData()
         self.pids = dict()
+        self.name = name
         self.dstip = ipaddress
         self.dstudp = udpport
         self.setupUDP()
@@ -54,7 +55,6 @@ class MpegTS(object):
         self.diagnostics = True
         self.blocksTransmitted = 0
         self.blocksReceived = 0
-        self.name = None
         self._dumpfname = None
         self._alignmentObservers = [] # Some callbacks for the alignment state
         self._diagnosticObservers = [] # Call back of diagnostics output
@@ -103,6 +103,7 @@ class MpegTS(object):
 
     def setupUDP(self):
         '''Open a UDP socket'''
+        logging.warn("Video {} will be transmitted to port {} at address {}".format(self.name,self.dstudp,self.dstip))
         self.sendSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         iptuples = self.dstip.split('.')
         if iptuples[0] > 223 and iptuples[0] < 240:

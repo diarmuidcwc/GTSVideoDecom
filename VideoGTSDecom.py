@@ -51,8 +51,7 @@ class VideoGTSDecom(GtsDec.GtsDec):
         self.vidOverPCM = vidoverPCM
         udp_port = self.dstport
         for vid in self.vidOverPCM.vidsPerXidml:
-            self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port,ipaddress=self.dstip)
-            self.mpegTS[vid].name = vid
+            self.mpegTS[vid] = MpegTS.MpegTS(udpport=udp_port,ipaddress=self.dstip,name=vid)
             self.mpegTS[vid].diagnostics = diagnostics
             if self.logtofile:
                 sanitisedFname = vid.replace("/","_")

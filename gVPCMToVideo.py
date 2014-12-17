@@ -30,7 +30,7 @@ from Tkinter import *
 import tkFileDialog
 import logging
 import datetime
-
+import ConfigParser
 
 
 
@@ -165,15 +165,35 @@ class MainFrame(Frame):
         self._initStructures()
 
         # Settings
-        self.dllpath    = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
+        CONFIG_FILE = "gtsdecom.ini"
+        config = ConfigParser.SafeConfigParser()
+        GTSDEC_SERIAL_NUM = "XS9766"
+        GTSDEC_NAME = "MyCard"
+        DLL_PATH = os.path.join("C:\\","ACRA","GroundStationSetup","3.3.0","Software","Bin","gtsdecw.dll")
+        DST_PORT = 7777
+        DST_IP = "235.0.0.1"
+        if os.path.exists(CONFIG_FILE):
+            config.read(CONFIG_FILE)
+            if config.get('Hardware', 'SerialNumber'):
+                GTSDEC_SERIAL_NUM = config.get('Hardware', 'SerialNumber')
+            if config.get('Hardware', 'CardName'):
+                GTSDEC_NAME = config.get('Hardware', 'CardName')
+            if config.get('Software', 'DLLPath'):
+                DLL_PATH = config.get('Software', 'DLLPath')
+            if config.getint("Network","DestinationPort"):
+                DST_PORT = config.getint("Network","DestinationPort")
+            if config.get("Network","DestinationAddress"):
+                DST_IP = config.get("Network","DestinationAddress")
+
+        self.dllpath    = DLL_PATH
         self.gtsDecName = StringVar()
-        self.gtsDecName.set("MyCard")
+        self.gtsDecName.set(GTSDEC_NAME)
         self.gtsdecSerialNum = StringVar()
-        self.gtsdecSerialNum.set("XS9766")
+        self.gtsdecSerialNum.set(GTSDEC_SERIAL_NUM)
         self.dstip = StringVar()
-        self.dstip.set("235.0.0.1")
+        self.dstip.set(DST_IP)
         self.dstport = IntVar()
-        self.dstport.set(7777)
+        self.dstport.set(DST_PORT)
 
         # The windowing aspects
         self.parent = parent
