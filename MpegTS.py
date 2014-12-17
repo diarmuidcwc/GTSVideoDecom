@@ -26,6 +26,7 @@ import struct
 import socket
 import logging
 import time
+from profilehooks import profile
 
 
 
@@ -64,10 +65,10 @@ class MpegTS(object):
         for callback in self._alignmentObservers:
             callback(self.aligned)
 
+
     def addPayload(self,payload):
         '''Accept a chunk of data and add it to the existing payload and then send when we have
         enough payload received'''
-
         if self.aligned == True:
             self.alignedPayload += payload
             self.sendAlignedBlocks()

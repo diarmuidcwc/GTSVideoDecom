@@ -27,6 +27,8 @@ import time
 import VidOverPCM
 import VideoGTSDecom
 import argparse
+from threading import Thread
+from threading import Event
 
 # Constants for this script
 GTSDEC_SERIAL_NUM = "XS9766"
@@ -36,6 +38,32 @@ SRC_XIDML = "Configuration/vid_single106_145.XML"
 GTSDEC_XIDML = "Configuration/gtsdec5.xml"
 GTSDEC_NAME = "MyCard"
 
+
+class RunThread(Thread):
+    '''Very basic thread in which to run the sleep loop while the callbacks are running'''
+    def __init__(self):
+        super(RunThread,self).__init__()
+        self._stop = Event()
+
+    def stop(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
+
+    def run(self):
+        second_count = 0
+        minute_count = 0
+        while True:
+            time.sleep(1)                       # The callback will be firing all during this point
+
+            if second_count % 60 == 0:
+                print "{} minutes".format(minute_count)
+                minute_count += 1
+            print ".",
+            second_count += 1
+            if self._stop.isSet():
+                return
 
 def main():
 
@@ -76,25 +104,27 @@ def main():
     logging.info("GTS/DEC card successfully opened")
     mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
                                                         # my CustomGTSDecom class
-    print mygtsdec.logSummary()
 
     mygtsdec.run()                          # Run the acquisition
     logging.info("Acquisition running")
 
-    second_count = 0
-    minute_count = 0
-    while True:                 # Run for a number of seconds
-        print ".",
-        time.sleep(1)                       # The callback will be firing all during this point
-        if second_count % 60 == 0:
-            print "{} minutes".format(minute_count)
-            minute_count += 1
-        second_count += 1
+    # Stick the run loop in a separate thread.
+    # Not sure if this helps, is sleep blocking?
+    runThread = RunThread()
+    runThread.start()
+    try:
+        while True:
+            pass
+    except KeyboardInterrupt:
+        runThread.stop()
+
     print ""
 
     logging.info("Stopping acquisition")
     mygtsdec.stop()                         # Stop the acquisition
     mygtsdec.close()                        # Close the card
+    logging.info("Closed Card")
+    exit()
 
 if __name__ == '__main__':
     main()
