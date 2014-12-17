@@ -70,13 +70,17 @@ lost on the VID/103. To be investigated
 ##Command Line Application##
 To run the command line version of the tool run
 ```
-python VideoOverPCM_To_UDP.py  --gtsdec <gtsdec.xml> --xidml <taskfile.xidml> [--dstip <destination IP Address> ]
+python VideoOverPCM_To_UDP.py  --gtsdec <gtsdec.xml> --xidml <taskfile.xidml>
 ```
 
 The output is very simple. The application will configure the GTS/DEC card, read the task file, identify all the VIDEO
 instruments, and then bridge the PCM source frames to multiple UDP streams
 
 The application will constantly try to keep the video words aligned
+
+##Configuration##
+A number of configuration options for the tool can be set and stored in the gtsdecom.ini file. this applies to both the
+command line and the GUI
 
 ##Playback##
 This application generates a single UDP stream per video instruments. The application will
