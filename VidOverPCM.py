@@ -48,6 +48,7 @@ class VidOverPCM():
         self.dataBitsPerWord = 16
         self.vidsPerXidml = list()
         # Internal only
+        self._maxWordOffset = 0
         self._parameterOfInterestRE = "_VIDEO_"
         self._parameterReferenceVendorOfInterestRE = "MPEG2TS|Video"
         self._allVidParams = dict()
@@ -69,6 +70,7 @@ class VidOverPCM():
         self._findAllPCMPackages()
         self._pruneUnusedVids()
         self._numberOfVids()
+        self._preCalcParams()
 
 
 
@@ -79,6 +81,19 @@ class VidOverPCM():
             if numberOfParams > 0:
                 self.vidsPerXidml.append(vid)
 
+    def _preCalcParams(self):
+        '''This function creates a dict per vid with a list of indices for a word buffer
+        This allows me to take a list of words and convert to a buffer'''
+        self._vidsCache = dict()
+        for vid,params in self.vids.items():
+            numberOfParams = len(params)
+            self._vidsCache[vid] = dict()
+            for p_index,param in enumerate(natural_sort(params)):
+                for wd_index,word_offset in enumerate(params[param]):
+                    # This works out the location within the PCM frame of every video word and caches it
+                    self._vidsCache[vid][(wd_index*numberOfParams)+p_index] = word_offset
+                    if self._maxWordOffset < word_offset:
+                        self._maxWordOffset = word_offset
 
 
     def frameToBuffers(self,listofwords):
@@ -87,22 +102,17 @@ class VidOverPCM():
         '''
         vid_bufs = {}
         #print "DEBUG: list of words len = {}".format(len(listofwords))
+
+        if self._maxWordOffset > len(listofwords):
+            raise ValueError ("List of words not long enough .Are you using the correct xidml source file?")
+
         for vid in self.vids:
             vid_bufs[vid] = ""
-        for vid,params in self.vids.items():
-            numberOfParams = len(params)
-            # create a temp dict so that I can build the string out of order
-            _buffertmp = {}
-            for p_index,param in enumerate(natural_sort(params)):
-                for wd_index,word_offset in enumerate(params[param]):
-                    # bounds check
-                    if word_offset > len(listofwords):
-                        raise ValueError ("List of words not long enough .Are you using the correct xidml source file?")
-                    _buffertmp[(wd_index*numberOfParams)+p_index] = struct.pack('>H',listofwords[word_offset])
 
+        for vid,params in self.vids.items():
             # Now convert the dict back into string buffers
-            for idx in sorted(_buffertmp):
-                vid_bufs[vid] += _buffertmp[idx]
+            for idx in sorted(self._vidsCache[vid]):
+                vid_bufs[vid] += struct.pack('>H',listofwords[self._vidsCache[vid][idx]])
 
         return vid_bufs
 
