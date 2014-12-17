@@ -98,7 +98,7 @@ class MpegTS(object):
         (syncByte,tpid) = struct.unpack_from('BB',self.alignedPayload)
         if syncByte != 0x47 :
             self.setAlignment(False)
-            logging.error("Out of sync in MPEG TS {}".format(self.name))
+            logging.info("Out of sync in MPEG TS {}".format(self.name))
 
 
     def setupUDP(self):
@@ -187,7 +187,7 @@ class MpegTS(object):
         if self.aligned:
             logging.info("{} is aligned. Transmitting to {} port {}. time = {}".format(self.name,self.dstip,self.dstudp,time.strftime("%H:%ML%S",time.gmtime())))
         else:
-            logging.warn("{} is out of alignment. Stopping UDP transmission. time = {}".format(self.name,self.dstip,self.dstudp,time.strftime("%H:%ML%S",time.gmtime())))
+            logging.info("{} is out of alignment. Stopping UDP transmission. time = {}".format(self.name,self.dstip,self.dstudp,time.strftime("%H:%ML%S",time.gmtime())))
 
     def resetData(self):
         self.payload = ""

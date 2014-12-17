@@ -29,6 +29,7 @@ import VideoGTSDecom
 import argparse
 from threading import Thread
 from threading import Event
+import logging
 
 # Constants for this script
 GTSDEC_SERIAL_NUM = "XS9766"
@@ -73,13 +74,27 @@ def main():
     parser.add_argument('--xidml', type=str, required=True, help='the DASStudio or KSM xidml')
     parser.add_argument('--dstip', type=str, required=False,default="235.0.0.1", help='the destination IP address')
     parser.add_argument('--dstudp', type=int, required=False,default=7777, help='the destination UDP port')
+    parser.add_argument('--verbose', type=int, required=False,default=2, help='Verbose level (1=error,2=warn,3=info,4=debug)')
+    parser.add_argument('--quiet',  action='store_true', help='Quiet Mode')
 
     args = parser.parse_args()
 
 
     # Setup a logger
-    import logging
-    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
+
+
+    if args.verbose == 1:
+        dbg_level = logging.ERROR
+    elif args.verbose == 2:
+        dbg_level = logging.WARN
+    elif args.verbose == 3:
+        dbg_level = logging.INFO
+    elif args.verbose == 4:
+        dbg_level = logging.DEBUG
+    if args.quiet :
+        dbg_level = logging.ERROR
+
+    logging.basicConfig(format='%(asctime)s %(message)s', level=dbg_level)
 
 
 
@@ -87,10 +102,10 @@ def main():
     vidxidml = VidOverPCM.VidOverPCM()
     vidxidml.parseXidml(args.xidml)
     for vidname in vidxidml.vids:
-        logging.info("Found vid = {}".format(vidname))
+        logging.warn("Found vid = {}".format(vidname))
     # We now have an object that knows how to convert a PCM frame into one or multiple
     # video payloads containing MPEG TS data
-    logging.info("Read in source xidml")
+    logging.warn("Read in source xidml")
 
     # I have inherited the basic GTSDec Class so that I can replace the callback function
     mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
@@ -101,12 +116,12 @@ def main():
     mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
     mygtsdec.configureGtsDec(args.gtsdec,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration
     mygtsdec.openGtsDec(GTSDEC_SERIAL_NUM)              # Open the card by serial number
-    logging.info("GTS/DEC card successfully opened")
+    logging.warn("GTS/DEC card successfully opened")
     mygtsdec.setupCallback()                            # Setup the default callback, this is the method declared in
                                                         # my CustomGTSDecom class
 
     mygtsdec.run()                          # Run the acquisition
-    logging.info("Acquisition running")
+    logging.warn("Acquisition running")
 
     # Stick the run loop in a separate thread.
     # Not sure if this helps, is sleep blocking?
@@ -120,7 +135,7 @@ def main():
 
     print ""
 
-    logging.info("Stopping acquisition")
+    logging.warn("Stopping acquisition")
     mygtsdec.stop()                         # Stop the acquisition
     mygtsdec.close()                        # Close the card
     logging.info("Closed Card")
