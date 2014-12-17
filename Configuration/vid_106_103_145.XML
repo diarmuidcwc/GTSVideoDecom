@@ -4619,8 +4619,8 @@
 								<Module-Video-In-1.2>
 									<Compression>
 										<AlgorithmReference>KAD/VID/106_M9_AL_VIDEO_0</AlgorithmReference>
-										<GopMode>1:15</GopMode>
-										<TemporalDecimation>25</TemporalDecimation>
+										<GopMode>1:1</GopMode>
+										<TemporalDecimation>12.5</TemporalDecimation>
 									</Compression>
 									<Source>
 										<MultiplexerSelect>INPUT1</MultiplexerSelect>
@@ -4628,7 +4628,7 @@
 										<Resolution>D1</Resolution>
 									</Source>
 									<TransportPackageReference>KAD/VID/106_M9_PK_TRANS_0</TransportPackageReference>
-									<AudioSetting>Stereo</AudioSetting>
+									<AudioSetting>None</AudioSetting>
 									<InputSelection>Programmable</InputSelection>
 									<TextStyles>
 										<TextStyle Name="Timer">
@@ -4640,7 +4640,7 @@
 											<Placement>
 												<Pixel>
 													<Horizontal>40</Horizontal>
-													<Vertical>1:15</Vertical>
+													<Vertical>1:1</Vertical>
 												</Pixel>
 											</Placement>
 											<Background>
@@ -4660,10 +4660,10 @@
 									<acra:TextHorizontalPlacement>40</acra:TextHorizontalPlacement>
 									<acra:TextVerticalPlacement>40</acra:TextVerticalPlacement>
 									<acra:VideoBitRate_Mbps>0.9</acra:VideoBitRate_Mbps>
-									<acra:VideoCompressionGOP>1:15</acra:VideoCompressionGOP>
-									<acra:VideoFrameRate_PAL>25</acra:VideoFrameRate_PAL>
+									<acra:VideoCompressionGOP>1:1</acra:VideoCompressionGOP>
+									<acra:VideoFrameRate_PAL>12.5</acra:VideoFrameRate_PAL>
 									<acra:VideoFrameRate_NTSC>30</acra:VideoFrameRate_NTSC>
-									<acra:AudioChannel>Stereo</acra:AudioChannel>
+									<acra:AudioChannel>None</acra:AudioChannel>
 									<acra:Enable12bitSampling>0</acra:Enable12bitSampling>
 									<acra:SignalPrefix>VID106_0_J9_VIDEO_0</acra:SignalPrefix>
 									<acra:BufferSizeInWords_0>658</acra:BufferSizeInWords_0>
@@ -4689,8 +4689,8 @@
 								<Module-Video-In-1.2>
 									<Compression>
 										<AlgorithmReference>KAD/VID/106_M11_M11_AL_VIDEO_0</AlgorithmReference>
-										<GopMode>1:15</GopMode>
-										<TemporalDecimation>25</TemporalDecimation>
+										<GopMode>1:1</GopMode>
+										<TemporalDecimation>12.5</TemporalDecimation>
 									</Compression>
 									<Source>
 										<MultiplexerSelect>INPUT1</MultiplexerSelect>
@@ -4698,7 +4698,7 @@
 										<Resolution>D1</Resolution>
 									</Source>
 									<TransportPackageReference>KAD/VID/106_M11_M11_PK_TRANS_0</TransportPackageReference>
-									<AudioSetting>None</AudioSetting>
+									<AudioSetting>Stereo</AudioSetting>
 									<InputSelection>Programmable</InputSelection>
 									<TextStyles>
 										<TextStyle Name="Timer">
@@ -4710,11 +4710,11 @@
 											<Placement>
 												<Pixel>
 													<Horizontal>40</Horizontal>
-													<Vertical>1:15</Vertical>
+													<Vertical>1:1</Vertical>
 												</Pixel>
 											</Placement>
 											<Background>
-												<Style>None</Style>
+												<Style>Solid</Style>
 											</Background>
 										</TextStyle>
 									</TextStyles>
@@ -4726,14 +4726,14 @@
 									<acra:VideoSource>CVBS_IN_0</acra:VideoSource>
 									<acra:EnableTimeOverlay>1</acra:EnableTimeOverlay>
 									<acra:WhiteTextColor>0</acra:WhiteTextColor>
-									<acra:TextBackgroundStyle>None</acra:TextBackgroundStyle>
+									<acra:TextBackgroundStyle>Solid</acra:TextBackgroundStyle>
 									<acra:TextHorizontalPlacement>40</acra:TextHorizontalPlacement>
 									<acra:TextVerticalPlacement>40</acra:TextVerticalPlacement>
-									<acra:VideoBitRate_Mbps>0.75</acra:VideoBitRate_Mbps>
-									<acra:VideoCompressionGOP>1:15</acra:VideoCompressionGOP>
-									<acra:VideoFrameRate_PAL>25</acra:VideoFrameRate_PAL>
+									<acra:VideoBitRate_Mbps>0.9</acra:VideoBitRate_Mbps>
+									<acra:VideoCompressionGOP>1:1</acra:VideoCompressionGOP>
+									<acra:VideoFrameRate_PAL>12.5</acra:VideoFrameRate_PAL>
 									<acra:VideoFrameRate_NTSC>30</acra:VideoFrameRate_NTSC>
-									<acra:AudioChannel>None</acra:AudioChannel>
+									<acra:AudioChannel>Stereo</acra:AudioChannel>
 									<acra:Enable12bitSampling>0</acra:Enable12bitSampling>
 									<acra:BufferSizeInWords_0>658</acra:BufferSizeInWords_0>
 									<acra:Timeout_0_msec>40</acra:Timeout_0_msec>
