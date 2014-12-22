@@ -26,7 +26,6 @@ import struct
 import socket
 import logging
 import time
-from profilehooks import profile
 
 
 
