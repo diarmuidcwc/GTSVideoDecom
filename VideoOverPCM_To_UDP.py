@@ -89,6 +89,8 @@ def main():
     parser.add_argument('--xidml', type=str, required=True, help='the DASStudio or KSM xidml')
     parser.add_argument('--verbose', type=int, required=False,default=2, help='Verbose level (1=error,2=warn,3=info,4=debug)')
     parser.add_argument('--quiet',  action='store_true', help='Quiet Mode')
+    parser.add_argument('--tofile',  action='store_true', default=False, help='Dump the video transport streams to a file')
+
 
     args = parser.parse_args()
 
@@ -124,7 +126,7 @@ def main():
     mygtsdec = VideoGTSDecom.VideoGTSDecom()                         # A new GtsDec object
     mygtsdec.dstip = DST_IP
     mygtsdec.dstport = DST_PORT
-    mygtsdec.logtofile = False
+    mygtsdec.logtofile = args.tofile
     mygtsdec.addVidOverPCM(vidxidml,diagnostics=False)                    # The VidOverPCM object
     mygtsdec.setDLLPath(DLL_PATH)                       # Pass the dll path
     mygtsdec.configureGtsDec(args.gtsdec,GTSDEC_NAME)  # Configure the GTS DEC card with the frame configuration
